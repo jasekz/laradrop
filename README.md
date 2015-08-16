@@ -1,6 +1,7 @@
 # Laradrop
 
-[![Software License][ico-license]](LICENSE)
+[![Software License][ico-license]](LICENSE.md)
+
 
 This is a file manager using Dropzone.js for Laravel 5.  It provides basic functionality for managing, uploading,
 and deleting files.
@@ -74,3 +75,4 @@ The MIT License (MIT). Please see [License File](LICENSE.md) for more informatio
 
 
 
+[ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square
