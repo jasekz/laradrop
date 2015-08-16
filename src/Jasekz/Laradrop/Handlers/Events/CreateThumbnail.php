@@ -9,6 +9,15 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Exception;
 
 class CreateThumbnail {
+    
+    private $acceptableExtensions = [
+        'jpg',
+        'jpeg',
+        'png',
+        'gif',
+    ];
+    
+    private $maxFileSize = 10; // Megabytes
 
     /**
      * Create the event handler.
@@ -29,7 +38,9 @@ class CreateThumbnail {
     public function handle(FileWasUploaded $event)
     {
         try {
-            if (file_exists($this->fileService->getInitialUploadsPath() . '/' . $event->data['fileName'])) {
+            if (in_array($event->data['fileExt'], $this->acceptableExtensions) 
+                && $event->data['fileSize'] < $this->maxFileSize * 1000000
+                && file_exists($this->fileService->getInitialUploadsPath() . '/' . $event->data['fileName'])) {
 
                 $img = Image::make($this->fileService->getInitialUploadsPath() . '/' . $event->data['fileName']);
                 $img->resize(150, 150);
