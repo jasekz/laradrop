@@ -189,11 +189,8 @@ jQuery.fn.laradrop = function(options) {
         <div class="progress-bar progress-bar-success" style="width:0%;height:2px;" data-dz-uploadprogress></div>\
 		</div>\
 		  <div id="template" class="file-row">\
-		    <div>\
-		        <span class="preview"><img data-dz-thumbnail /></span>\
-		    </div>\
 		    <div style="margin:5px;float:right;">\
-		      <button data-dz-remove class="btn btn-danger cancel">\
+		      <button data-dz-remove class="btn btn-danger btn-xs cancel">\
 		          <span>Cancel</span>\
 		      </button>\
 		    </div>\
