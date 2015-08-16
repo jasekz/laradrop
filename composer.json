@@ -1,7 +1,7 @@
 {
     "name": "jasekz/laradrop",
     "description": "File manager using Dropzone.js for Laravel 5",
-    "keywords": ["laravel","dropzone.js","file manager","file upload"],
+    "keywords": ["php","laravel 5","dropzone.js","file manager","file upload"],
     "license": "MIT",
     "authors": [
         {
