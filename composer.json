@@ -15,7 +15,7 @@
         "illuminate/support": "~5.0"
     },
     "autoload": {
-        "psr-0": {"Jasekz\Laradrop": "src"}
+        "psr-0": {"Jasekz\\Laradrop": "src"}
     },
     "minimum-stability": "dev"
 }
