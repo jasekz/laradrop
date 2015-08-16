@@ -1,12 +1,19 @@
 # Laradrop
 
+[![Software License][ico-license]](LICENSE)
+
 This is a file manager using Dropzone.js for Laravel 5.  It provides basic functionality for managing, uploading,
 and deleting files.
 
 ## Installation
 
-In order to install Laradrop, you will need to clone the package into your vendor directory manually until packagist
-is set up.  To do so, simply create ```vendor/jasekz/laradrop``` and clone this repo into that directory.
+Via composer
+```
+composer require jasekz/laradrop
+```
+```
+composer update
+```
 
 Then in your `config/app.php` add 
 ```php
