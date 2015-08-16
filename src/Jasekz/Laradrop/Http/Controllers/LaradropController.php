@@ -71,14 +71,14 @@ class LaradropController extends BaseController {
             event(new FileWasUploaded([
                 'filePath' => $movedFileDir . '/' . $movedFileName,
                 'fileName' => $movedFileName,
+                'fileSize' => Input::file('file')->getSize(),
+                'fileExt'  => $fileExt,
                 'postData' => Input::all()
             ]));
             
-            \Log::info('event fired');
         } 
 
         catch (Exception $e) {
-            \Log::info($e->getMessage());
             return $this->handleError($e);
         }
     }
