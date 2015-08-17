@@ -68,12 +68,13 @@ Add a button where you want to implement the file manager:
 
 Finally, bind the button using jQuery:
 ```javascript
-
-jQuery('.laradrop').laradrop({
-	onInsertCallback: function (src){
-	  // this is called when the 'select' button is clicked on a thumbnail
-		alert('File '+src+' selected.  Please implement onInsertCallback().');
-	}
+jQuery(document).ready(function(){
+	jQuery('.laradrop').laradrop({
+		onInsertCallback: function (src){
+		  // this is called when the 'select' button is clicked on a thumbnail
+			alert('File '+src+' selected.  Please implement onInsertCallback().');
+		}
+	});
 });
 ```
 ## License
