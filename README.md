@@ -83,8 +83,8 @@ jQuery(document).ready(function(){
 ## Events
 Laradrop currently fires two events:
 
-1. Jasekz\Laradrop\Events\FileWasUploaded - this is fired as soon as the file is uploaded to the initial uploads directory, as defined by ```LARADROP_INITIAL_UPLOADS_DIR```.  At this point, the file is not yet saved in the database, thumbnails are not created and it is not moved to the final location, as defined by ```LARADROP_STORAGE_ENGINES.LOCAL.UPLOADS_DIR```.
-2. Jasekz\Laradrop\Events\FileWasDeleted - this is fired as soon as the file is deleted from the database.  At this point, the file and thumbnails still reside in the uploads dir, as defined by ```LARADROP_STORAGE_ENGINES.LOCAL.UPLOADS_DIR```.
+1. **Jasekz\Laradrop\Events\FileWasUploaded** - this is fired as soon as the file is uploaded to the initial uploads directory, as defined by ```LARADROP_INITIAL_UPLOADS_DIR```.  At this point, the file is not yet saved in the database, thumbnails are not created and it is not moved to the final location, as defined by ```LARADROP_STORAGE_ENGINES.LOCAL.UPLOADS_DIR```.
+2. **Jasekz\Laradrop\Events\FileWasDeleted** - this is fired as soon as the file is deleted from the database.  At this point, the file and thumbnails still reside in the uploads dir, as defined by ```LARADROP_STORAGE_ENGINES.LOCAL.UPLOADS_DIR```.
 
 
 ## License
