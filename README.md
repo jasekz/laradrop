@@ -8,6 +8,8 @@ and deleting files.
 
 ## Installation
 
+NOTE: If you haven't set up a database yet for your app, please do that first as per Laravel docs -  http://laravel.com/docs/5.0/database.
+
 Via composer
 ```
 composer require jasekz/laradrop
