@@ -170,7 +170,7 @@ jQuery.fn.laradrop = function(options) {
 				<div class="caption" style="display:none;position:absolute;bottom:20px;left:13px;">\
 					<div class="row">\
 						<div class="col-md-5">\
-							<button class="btn btn-success btn-xs insert">Insert</button>\
+							<button class="btn btn-success btn-xs insert">Select</button>\
 						</div>\
 						<div class="col-md-5">\
 							<button class="btn btn-danger btn-xs delete" file-id="[[fileId]]" >Delete</button>\
