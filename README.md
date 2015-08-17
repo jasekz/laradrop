@@ -39,9 +39,9 @@ followed by
 Now in your .env file, define your file upload paths and urls:
 ```php
 LARADROP_STORAGE_ENGINE=local
-LARADROP_INITIAL_UPLOADS_DIR=/myapp/storage
-LARADROP_STORAGE_ENGINES.LOCAL.UPLOADS_DIR=/myapp/public/images
-LARADROP_STORAGE_ENGINES.LOCAL.PUBLIC_LOCATION=/images
+LARADROP_INITIAL_UPLOADS_DIR=/absolute/path/to/storage
+LARADROP_STORAGE_ENGINES.LOCAL.UPLOADS_DIR=/absolute/path/to/public/uploads
+LARADROP_STORAGE_ENGINES.LOCAL.PUBLIC_LOCATION=/uploads
 ```
 ## Usage
 This package requires Dropzone.js, jQuery, Bootstrap, as well as some application level js.  Include these somewhere in your view:
@@ -68,6 +68,7 @@ Add a button where you want to implement the file manager:
 
 Finally, bind the button using jQuery:
 ```javascript
+<script>
 jQuery(document).ready(function(){
 	jQuery('.laradrop').laradrop({
 		onInsertCallback: function (src){
@@ -76,6 +77,7 @@ jQuery(document).ready(function(){
 		}
 	});
 });
+</script>
 ```
 ## License
 
