@@ -44,11 +44,16 @@ LARADROP_STORAGE_ENGINES.LOCAL.UPLOADS_DIR=/myapp/public/images
 LARADROP_STORAGE_ENGINES.LOCAL.PUBLIC_LOCATION=/images
 ```
 ## Usage
-This package requires Dropzone.js as well as some application level js.  Include these somewhere in your view:
+This package requires Dropzone.js, jQuery, Bootstrap, as well as some application level js.  Include these somewhere in your view:
 ``` php
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <script src="/vendor/jasekz/laradrop/js/enyo.dropzone.js"></script>
 <script src="/vendor/jasekz/laradrop/js/laradrop.js"></script>
 ```
+
+NOTE:  I plan on removing the Bootstrap requirement, however, right now it is needed for the modal dialog and styling.
 
 Add a button where you want to implement the file manager:
 ``` html
