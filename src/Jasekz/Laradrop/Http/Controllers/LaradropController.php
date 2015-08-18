@@ -65,13 +65,14 @@ class LaradropController extends BaseController {
             $movedFileDir = Config::get('laradrop.LARADROP_INITIAL_UPLOADS_DIR');
             $movedFileName = $fileName . '.' . $fileExt;    
                
+            $fileSize = Input::file('file')->getSize();
             Request::file('file')->move($movedFileDir, $movedFileName);
             
             // fire 'file uploaded' event
             event(new FileWasUploaded([
                 'filePath' => $movedFileDir . '/' . $movedFileName,
                 'fileName' => $movedFileName,
-                'fileSize' => Input::file('file')->getSize(),
+                'fileSize' => $fileSize,
                 'fileExt'  => $fileExt,
                 'postData' => Input::all()
             ]));
