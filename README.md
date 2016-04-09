@@ -59,7 +59,7 @@ Add a button where you want to implement the file manager:
 ``` html
 <div class="laradrop"
   laradrop-upload-handler="{{ route('laradrop.store') }}"
-  laradrop-file-delete-handler="{{ route('laradrop.destroy') }}" 
+  laradrop-file-delete-handler="{{ route('laradrop.destroy', 0) }}" 
   laradrop-file-source="{{ route('laradrop.index') }}"
   laradrop-csrf-token="{{ csrf_token() }}" >
   <button class='btn btn-primary laradrop-select-file' >Add File</button>
