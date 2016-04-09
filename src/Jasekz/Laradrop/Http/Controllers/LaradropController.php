@@ -8,7 +8,7 @@ use Jasekz\Laradrop\Services\File;
 use Jasekz\Laradrop\Events\FileWasUploaded;
 use Jasekz\Laradrop\Events\FileWasDeleted;
 use Jasekz\Laradrop\Services\StorageProviders\Storable as StorageProvider;
-use Input;
+use Illuminate\Support\Facades\Input;
 use Request;
 use Exception;
 use Config;
