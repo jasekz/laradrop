@@ -18,7 +18,6 @@ class LaradropServiceProvider extends ServiceProvider {
         'Jasekz\Laradrop\Events\FileWasUploaded' => [
             'Jasekz\Laradrop\Handlers\Events\CreateThumbnail',
             'Jasekz\Laradrop\Handlers\Events\MoveFile',
-            'Jasekz\Laradrop\Handlers\Events\SaveFile',
         ],
         'Jasekz\Laradrop\Events\FileWasDeleted' => [
             'Jasekz\Laradrop\Handlers\Events\DeleteFile',
@@ -49,6 +48,10 @@ class LaradropServiceProvider extends ServiceProvider {
         $this->publishes([
             __DIR__ . '/resources/assets' => public_path('vendor/jasekz/laradrop')
         ], 'public');
+        
+        $this->loadViewsFrom(__DIR__ . '/resources/views', 'laradrop');
+        
+        $this->loadTranslationsFrom(__DIR__ . '/resources/lang', 'laradrop');
     }
 
     /**

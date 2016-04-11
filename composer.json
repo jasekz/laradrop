@@ -14,7 +14,8 @@
         "php": ">=5.4.0",
         "illuminate/support": "~5.0",
         "ext-fileinfo": "*",
-        "intervention/image": "2.*"
+        "intervention/image": "2.*",        
+        "baum/baum": "~1.1"
     },
     "autoload": {
         "psr-0": {"Jasekz\\Laradrop": "src"}

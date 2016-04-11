@@ -1,13 +1,13 @@
 <?php
 namespace Jasekz\Laradrop\Handlers\Events;
 
-use Jasekz\Laradrop\Events\FileWasUploaded;
+use Jasekz\Laradrop\Events\FileWasDeleted;
 use Jasekz\Laradrop\Services\StorageProviders\Storable as StorageProvider;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Exception;
 
-class MoveFile {
+class DeleteFile {
 
     /**
      * Create the event handler.
@@ -22,13 +22,13 @@ class MoveFile {
     /**
      * Handle the event.
      *
-     * @param FileWasUploaded $event            
+     * @param FileWasDeleted $event            
      * @return void
      */
-    public function handle(FileWasUploaded $event)
+    public function handle(FileWasDeleted $event)
     {
         try {
-            $this->storageProvider->moveFile($event->data);            
+            $this->storageProvider->deleteFile($event->data['file']);            
         }
         
         catch (Exception $e) {
