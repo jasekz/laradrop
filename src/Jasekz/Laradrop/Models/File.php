@@ -19,7 +19,7 @@ class File extends Node {
      * @var array
      */
     protected $fillable = [
-        'filename', 'parent_id', 'type', 
+        'filename', 'parent_id', 'type', 'system_resource_path', 'public_resource_url', 'meta', 
     ];
 
 }

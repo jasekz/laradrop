@@ -5,10 +5,10 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Support\Facades\Input;
-use Request, Exception, Config;
-
-use Jasekz\Laradrop\Services\File;
+use Intervention\Image\ImageManagerStatic as Image;
+use Jasekz\Laradrop\Services\File as FileService;
 use Jasekz\Laradrop\Events\FileWasUploaded;
+use Request, Exception, File;
 
 class LaradropController extends BaseController {
 
@@ -17,7 +17,7 @@ class LaradropController extends BaseController {
      *
      * @param File $file         
      */
-    public function __construct(File $file)
+    public function __construct(FileService $file)
     {
         $this->file = $file;
     }
@@ -88,44 +88,72 @@ class LaradropController extends BaseController {
     }
 
     /**
-     * Upload and store new file(s).
+     * Upload and store new file.
      *
      * @return JsonResponse
      */
     public function store()
     {
         try {
+
             if (! Request::hasFile('file')) {
-                throw new Exception('File not provided.');
+                throw new Exception(trans('err.fileNotProvided'));
             }
             
-            // move file            
+            /*
+             * move file to temp location
+             */          
             $fileExt = Input::file('file')->getClientOriginalExtension();
             $fileName = str_replace('.' . $fileExt, '', Input::file('file')->getClientOriginalName()) . '-' . date('Ymdhis');
             $mimeType = Request::file('file')->getMimeType();     
                    
-            $movedFileDir = Config::get('laradrop.LARADROP_INITIAL_UPLOADS_DIR');
+            $tmpStorage = storage_path();
             $movedFileName = $fileName . '.' . $fileExt;    
                
             $fileSize = Input::file('file')->getSize();
             
-            $fileData['filename'] = $fileName . '.' . $fileExt;
+            Request::file('file')->move($tmpStorage, $movedFileName);
+
+            /*
+             * create thumbnail if needed
+             */
+            if (in_array($fileExt, ['jpg', 'jpeg', 'png', 'gif']) && $fileSize < config('laradrop.max_upload_size') * 1000000) {
+
+                $thumbDims = config('laradrop.thumb_dimensions');
+                $img = Image::make($tmpStorage . '/' . $movedFileName);
+                $img->resize($thumbDims['width'], $thumbDims['height']);
+                $img->save($tmpStorage . '/_thumb_' . $movedFileName);
+
+                // move thumbnail to final location
+                app()->make('laradropStorage')->put('_thumb_' . $movedFileName, fopen($tmpStorage . '/_thumb_' . $movedFileName, 'r+'));
+                File::delete($tmpStorage . '/_thumb_' . $movedFileName);
+            }
+
+            /*
+             * move uploaded file to final location
+             */
+            app()->make('laradropStorage')->put($movedFileName, fopen($tmpStorage . '/' . $movedFileName, 'r+'));
+            File::delete($tmpStorage . '/' . $movedFileName);
+            
+            /*
+             * save in db
+             */          
+            $fileData['filename'] = $movedFileName;  
+            $fileData['alias'] = Input::file('file')->getClientOriginalName();
+            $fileData['system_resource_path'] = ''; //app()->make('laradropStorage');
+            $fileData['public_resource_url'] = app()->make('laradropStorage')->disk_public_url . '/' . $movedFileName;
             $fileData['type'] = $fileExt;
             if(Input::get('pid') > 0) {
                 $fileData['parent_id'] = Input::get('pid');
             }
-            
+            $fileData['meta'] = json_encode(app()->make('laradropStorage')->getDriver()->getAdapter()->getMetaData($movedFileName));
             $file = $this->file->create($fileData);
             
-            Request::file('file')->move($movedFileDir, $movedFileName);
-            
-            // fire 'file uploaded' event
+            /*
+             * fire 'file uploaded' event
+             */
             event(new FileWasUploaded([
                 'file'     => $file,
-                'filePath' => $movedFileDir,
-                'fileName' => $movedFileName,
-                'fileSize' => $fileSize,
-                'fileExt'  => $fileExt,
                 'postData' => Input::all()
             ]));
             

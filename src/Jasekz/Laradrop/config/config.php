@@ -1,17 +1,15 @@
 <?php
 
 return [    
-    // temporary storage dir; this is where the file will be dropped on upload
-    'LARADROP_INITIAL_UPLOADS_DIR' => env('LARADROP_INITIAL_UPLOADS_DIR', public_path()),
+    // max file upload size in MB
+    'max_upload_size' => env('LARADROP_MAX_UPLOAD_SIZE', 10),
     
-    'LARADROP_STORAGE_ENGINE' => 'local', // LOCAL, S3
-    'LARADROP_STORAGE_ENGINES' => [
-        'LOCAL' => [
-            'UPLOADS_DIR' => env('LARADROP_STORAGE_ENGINES.LOCAL.UPLOADS_DIR', public_path()),
-            'PUBLIC_LOCATION' => env('LARADROP_STORAGE_ENGINES.LOCAL.PUBLIC_LOCATION', '/img'),
-        ],
-//         'S3' => [ // future feature
-//             'BUCKET' => env('LARADROP_STORAGE_ENGINES.S3.BUCKET', ''),
-//         ]
-    ],
+    // dimensions for thumbnail generator
+    'thumb_dimensions' => ['width' => env('LARADROP_THUMB_WIDTH', 150), 'height' => env('LARADROP_THUMB_HEIGHT', 150)],
+    
+    // storage location - use config/filesystems.php 'disks'
+    'disk' => env('LARADROP_DISK', 'local'),
+    
+    // if this needs to be publicly accessible, this is the 'root storage directory'
+    'disk_public_url' => env('LARADROP_DISK_PUBLIC_URL', '/'),
 ];

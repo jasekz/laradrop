@@ -6,6 +6,7 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
 use Jasekz\Laradrop\Services\File as FileService;
 use Config;
 use File;
+use Storage;
 
 class LaradropServiceProvider extends ServiceProvider {
 
@@ -15,10 +16,6 @@ class LaradropServiceProvider extends ServiceProvider {
      * @var array
      */
     protected $listen = [
-        'Jasekz\Laradrop\Events\FileWasUploaded' => [
-            'Jasekz\Laradrop\Handlers\Events\CreateThumbnail',
-            'Jasekz\Laradrop\Handlers\Events\MoveFile',
-        ],
         'Jasekz\Laradrop\Events\FileWasDeleted' => [
             'Jasekz\Laradrop\Handlers\Events\DeleteFile',
         ],
@@ -60,20 +57,13 @@ class LaradropServiceProvider extends ServiceProvider {
      * @return void
      */
     public function register()
-    {
-        $this->app->bind('laradrop', function ($app)
+    {        
+        $this->app->bind('laradropStorage', function ($app)
         {
-            return new Services\LaradropService();
-        });
-        
-        $this->app->bind('Jasekz\Laradrop\Services\StorageProviders\Storable', function ($app)
-        {
-            /*
-             * Here, we will determine which storage provider should be used, based on config settings
-             * and return the appropriate object.
-             */
-            $provider = 'Jasekz\Laradrop\Services\StorageProviders\\' . ucfirst(strtolower(Config::get('laradrop.LARADROP_STORAGE_ENGINE')));
-            return new $provider(new File, new FileService);
+            $disk = Storage::disk(config('laradrop.disk'));
+            $disk->disk_public_url = config('laradrop.disk_public_url');
+            
+            return $disk;
         });
     }
 }

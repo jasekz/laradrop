@@ -2,7 +2,6 @@
 namespace Jasekz\Laradrop\Services;
 
 use Jasekz\Laradrop\Models\File as FileModel;
-use Jasekz\Laradrop\Events\FileWasUploaded;
 use Jasekz\Laradrop\Events\FileWasDeleted;
 use Exception, Config;
 
@@ -27,11 +26,12 @@ class File extends FileModel {
             }
             
             if(isset($files)) {
-                $storageProvider = \App::make('\Jasekz\Laradrop\Services\StorageProviders\Storable');
                 
                 foreach($files as $file) {
+                    $publicResourceUrlSegments = explode('/', $file->public_resource_url);
+                    $publicResourceUrlSegments[count($publicResourceUrlSegments) - 1] = '_thumb_' . $publicResourceUrlSegments[count($publicResourceUrlSegments) - 1];
                     $file->alias = $file->filename;
-                    $file->filename = $storageProvider->getPublicLocation() . '/_thumb_' . $file->filename;
+                    $file->filename = implode('/', $publicResourceUrlSegments); 
                     $file->numChildren = $file->children()->count();
                     
                     if($file->type == 'folder') {
@@ -62,7 +62,7 @@ class File extends FileModel {
             $file = self::find($id);
             
             if($file->descendants()->exists()) {
-                foreach($file->descendants()->where('type', '=', 'file')->get() as $descendant) {
+                foreach($file->descendants()->where('type', '!=', 'folder')->get() as $descendant) {
                     
                     event(new FileWasDeleted([ // fire 'file deleted' event for each descendant
                         'file' => $descendant
@@ -104,35 +104,5 @@ class File extends FileModel {
         catch (Exception $e) {
             throw $e;
         }
-    }
-    
-    /**
-     * Return intial uploads path.  
-     * 
-     * @return string
-     */
-    public function getInitialUploadsPath()
-    {
-        return Config::get('laradrop.LARADROP_INITIAL_UPLOADS_DIR');
-    }
-    
-    /**
-     * Return public uploads path.  
-     * 
-     * @return string
-     */
-    public function getPublicUploadsPath()
-    {
-        return Config::get('laradrop.LARADROP_STORAGE_ENGINES.LOCAL.UPLOADS_DIR');
-    }
-    
-    /**
-     * Return public file location.  
-     * 
-     * @return string
-     */
-    public function getPublicLocation()
-    {
-        return Config::get('laradrop.LARADROP_STORAGE_ENGINES.LOCAL.PUBLIC_LOCATION');
     }
 }

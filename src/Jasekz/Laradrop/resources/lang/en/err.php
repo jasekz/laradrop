@@ -13,11 +13,5 @@ return [
     |
     */
 
-    'addFolder' => '&#43; Add Folder',
-    'delete' => '&#10008; delete',
-    'move' => '&#8631; move',
-    'save' => 'Save',
-    'select' => '&#10004; select',
-    'startUpload' => 'Start Upload',
-    'uploadFiles' => '&#8682; Click or drop files here to upload.',
+    'fileNotProvided' => 'File not provided.',
 ];
