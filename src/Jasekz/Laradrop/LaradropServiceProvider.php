@@ -58,12 +58,5 @@ class LaradropServiceProvider extends ServiceProvider {
      */
     public function register()
     {        
-        $this->app->bind('laradropStorage', function ($app)
-        {
-            $disk = Storage::disk(config('laradrop.disk'));
-            $disk->disk_public_url = config('laradrop.disk_public_url');
-            
-            return $disk;
-        });
     }
 }

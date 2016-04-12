@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Input;
 use Intervention\Image\ImageManagerStatic as Image;
 use Jasekz\Laradrop\Services\File as FileService;
 use Jasekz\Laradrop\Events\FileWasUploaded;
-use Request, Exception, File;
+use Request, Exception, File, Storage;
 
 class LaradropController extends BaseController {
 
@@ -67,9 +67,8 @@ class LaradropController extends BaseController {
      */
     public function create() 
     {
-        try {
-            
-            $fileData['filename'] = Input::get('filename') ? Input::get('filename') : date('m.d.Y - G:i:s');
+        try {            
+            $fileData['alias'] = Input::get('filename') ? Input::get('filename') : date('m.d.Y - G:i:s');
             $fileData['type'] = 'folder';
             if(Input::get('pid') > 0) {
                 $fileData['parent_id'] = Input::get('pid');
@@ -100,24 +99,33 @@ class LaradropController extends BaseController {
                 throw new Exception(trans('err.fileNotProvided'));
             }
             
+            if( ! Request::file('file')->isValid()) {
+                throw new Exception(trans('err.invalidFile'));
+            }
+            
             /*
              * move file to temp location
-             */          
+             */
             $fileExt = Input::file('file')->getClientOriginalExtension();
             $fileName = str_replace('.' . $fileExt, '', Input::file('file')->getClientOriginalName()) . '-' . date('Ymdhis');
-            $mimeType = Request::file('file')->getMimeType();     
-                   
+            $mimeType = Request::file('file')->getMimeType();
             $tmpStorage = storage_path();
-            $movedFileName = $fileName . '.' . $fileExt;    
-               
+            $movedFileName = $fileName . '.' . $fileExt;
             $fileSize = Input::file('file')->getSize();
+
+            if($fileSize > ( (int) config('laradrop.max_upload_size') * 1000000) ) {
+                throw new Exception(trans('err.invalidFileSize'));
+            }
             
             Request::file('file')->move($tmpStorage, $movedFileName);
+            
+            $disk = Storage::disk(config('laradrop.disk'));
 
             /*
              * create thumbnail if needed
              */
-            if (in_array($fileExt, ['jpg', 'jpeg', 'png', 'gif']) && $fileSize < config('laradrop.max_upload_size') * 1000000) {
+            $fileData['has_thumbnail'] = 0;
+            if ($fileSize <= ( (int) config('laradrop.max_thumbnail_size') * 1000000) && in_array($fileExt, ['jpg', 'jpeg', 'png', 'gif'])) {
 
                 $thumbDims = config('laradrop.thumb_dimensions');
                 $img = Image::make($tmpStorage . '/' . $movedFileName);
@@ -125,14 +133,16 @@ class LaradropController extends BaseController {
                 $img->save($tmpStorage . '/_thumb_' . $movedFileName);
 
                 // move thumbnail to final location
-                app()->make('laradropStorage')->put('_thumb_' . $movedFileName, fopen($tmpStorage . '/_thumb_' . $movedFileName, 'r+'));
-                File::delete($tmpStorage . '/_thumb_' . $movedFileName);
-            }
+                $disk->put('_thumb_' . $movedFileName, fopen($tmpStorage . '/_thumb_' . $movedFileName, 'r+'));
+                File::delete($tmpStorage . '/_thumb_' . $movedFileName);                
+                $fileData['has_thumbnail'] = 1;
+                
+            } 
 
             /*
              * move uploaded file to final location
              */
-            app()->make('laradropStorage')->put($movedFileName, fopen($tmpStorage . '/' . $movedFileName, 'r+'));
+            $disk->put($movedFileName, fopen($tmpStorage . '/' . $movedFileName, 'r+'));
             File::delete($tmpStorage . '/' . $movedFileName);
             
             /*
@@ -140,13 +150,14 @@ class LaradropController extends BaseController {
              */          
             $fileData['filename'] = $movedFileName;  
             $fileData['alias'] = Input::file('file')->getClientOriginalName();
-            $fileData['system_resource_path'] = ''; //app()->make('laradropStorage');
-            $fileData['public_resource_url'] = app()->make('laradropStorage')->disk_public_url . '/' . $movedFileName;
+            $fileData['public_resource_url'] = config('laradrop.disk_public_url') . '/' . $movedFileName;
             $fileData['type'] = $fileExt;
             if(Input::get('pid') > 0) {
                 $fileData['parent_id'] = Input::get('pid');
             }
-            $fileData['meta'] = json_encode(app()->make('laradropStorage')->getDriver()->getAdapter()->getMetaData($movedFileName));
+            $meta = $disk->getDriver()->getAdapter()->getMetaData($movedFileName);
+            $meta['disk'] = config('laradrop.disk');
+            $fileData['meta'] = json_encode($meta);
             $file = $this->file->create($fileData);
             
             /*
@@ -162,6 +173,11 @@ class LaradropController extends BaseController {
         } 
 
         catch (Exception $e) {
+            
+            // delete the file(s)
+            $disk->delete($movedFileName);
+            $disk->delete('_thumb_' . $movedFileName);
+            
             return $this->handleError($e);
         }
     }
@@ -216,8 +232,7 @@ class LaradropController extends BaseController {
     public function update($id){
     
         try {
-            $file = $this->file->find($id);
-            
+            $file = $this->file->find($id);            
             $file->filename = Input::get('filename');
             $file->save();
 
@@ -241,6 +256,6 @@ class LaradropController extends BaseController {
     {
         return response()->json([
             'msg' => $e->getMessage()
-        ], 404);
+        ], 401);
     }
 }

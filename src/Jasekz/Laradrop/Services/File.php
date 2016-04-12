@@ -28,10 +28,17 @@ class File extends FileModel {
             if(isset($files)) {
                 
                 foreach($files as $file) {
-                    $publicResourceUrlSegments = explode('/', $file->public_resource_url);
-                    $publicResourceUrlSegments[count($publicResourceUrlSegments) - 1] = '_thumb_' . $publicResourceUrlSegments[count($publicResourceUrlSegments) - 1];
-                    $file->alias = $file->filename;
-                    $file->filename = implode('/', $publicResourceUrlSegments); 
+                    
+                    if( $file->has_thumbnail ) {
+                        
+                        $publicResourceUrlSegments = explode('/', $file->public_resource_url);
+                        $publicResourceUrlSegments[count($publicResourceUrlSegments) - 1] = '_thumb_' . $publicResourceUrlSegments[count($publicResourceUrlSegments) - 1];
+                        $file->filename = implode('/', $publicResourceUrlSegments); 
+                    
+                    } else {
+                        $file->filename = config('laradrop.default_thumbnail_url');
+                    }
+                    
                     $file->numChildren = $file->children()->count();
                     
                     if($file->type == 'folder') {
@@ -71,10 +78,12 @@ class File extends FileModel {
             }
             
             $file->delete($id);
-                        
-            event(new FileWasDeleted([ // fire 'file deleted' event for file
-                'file' => $file
-            ]));
+
+            if($file->type != 'folder') {
+                event(new FileWasDeleted([ // fire 'file deleted' event for file
+                    'file' => $file
+                ]));
+            }
         }
         
         catch (Exception $e) {

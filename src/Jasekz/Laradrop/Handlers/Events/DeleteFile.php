@@ -4,7 +4,7 @@ namespace Jasekz\Laradrop\Handlers\Events;
 use Jasekz\Laradrop\Events\FileWasDeleted;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Exception;
+use Exception, Storage;
 
 class DeleteFile {
 
@@ -17,8 +17,10 @@ class DeleteFile {
     public function handle(FileWasDeleted $event)
     {
         try {
-            app()->make('laradropStorage')->delete($event->data['file']->filename);   
-            app()->make('laradropStorage')->delete('_thumb_' . $event->data['file']->filename);          
+            $meta = json_decode($event->data['file']->meta);
+            $disk = Storage::disk($meta->disk);
+            $disk->delete($event->data['file']->filename);   
+            $disk->delete('_thumb_' . $event->data['file']->filename);          
         }
         
         catch (Exception $e) {
