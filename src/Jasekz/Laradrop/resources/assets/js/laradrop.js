@@ -12,6 +12,8 @@ jQuery.fn.laradrop = function(options) {
     	breadCrumbRootText = options.breadCrumbRootText ? options.breadCrumbRootText : 'Root Directory',
         folderImage = options.folderImage ? options.folderImage : '/vendor/jasekz/laradrop/img/genericThumbs/folder.png',
     	onInsertCallback = options.onInsertCallback ? options.onInsertCallback : null,
+    	onSuccessCallback = options.onSuccessCallback ? options.onSuccessCallback : null,
+    	onErrorCallback = options.onErrorCallback ? options.onErrorCallback : null,
     	uid = new Date().getTime(),
     	laradropObj = jQuery(this),
     	laradropContainer=null,
@@ -99,7 +101,15 @@ jQuery.fn.laradrop = function(options) {
 			        previewsContainer: "#laradrop-previews-"+uid, 
 			        previewTemplate:getPreviewContainer(),
 			        parallelUploads:1,
-			        init: function(){        		
+			        init: function(){  	            
+			    	    this.on("error", function(jqXHR,textStatus,errorThrown){
+			    	    	handleError({responseText:JSON.stringify(textStatus)});
+			    	    });                   
+			            this.on("success", function(status,res){
+			            	if(onSuccessCallback) {
+			            		eval(onSuccessCallback(res));
+			        		}
+			            }); 		
 			        	this.on("sending", function(file, xhr, data) {
 			        		random = Math.random().toString(36).replace('.', '');
 			                data.append(csrfTokenField, csrfToken);
@@ -126,7 +136,7 @@ jQuery.fn.laradrop = function(options) {
 			         	    $(".start").click(function() {
 			         		   dz.enqueueFiles(dz.getFilesWithStatus(Dropzone.ADDED));
 			         	    });
-			            });
+			            });		
 			        }
 			    });  
 		    }
@@ -302,7 +312,12 @@ jQuery.fn.laradrop = function(options) {
 	
 	function handleError(jqXHR,textStatus,errorThrown){
 		var error = jQuery.parseJSON(jqXHR.responseText);
-		alert(error.msg);
+		
+		if(onErrorCallback) {
+			eval(onErrorCallback(error.msg));
+		} else {
+			alert(error.msg);
+		}
 	}
 
 	function getLaradropContainer() {

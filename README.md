@@ -14,21 +14,14 @@ Via composer
 ```
 composer require jasekz/laradrop
 ```
-```
-composer update
-```
 
 Then in your `config/app.php` add 
 ```php
     'Jasekz\Laradrop\LaradropServiceProvider'
 ```    
-in the `providers` array and
-```php
-    'Laradrop' => 'Jasekz\Laradrop\LaradropFacade'
-```
-to the `aliases` array.
+to the `providers` array.
 
-Finally, run 
+Then run 
 
     artisan vendor:publish
     
@@ -36,49 +29,75 @@ followed by
 
     artisan migrate
 
-Now in your .env file, define your file upload paths and urls:
+Laradrop uses Laravel's Filesystem mechanism (https://laravel.com/docs/5.2/filesystem) and by default will store your 
+files in the `storage/app` directory.  If you would like to modify this behavior, along with other default settings, you can set your `.env` file variables:
 ```php
-LARADROP_STORAGE_ENGINE=local
-LARADROP_INITIAL_UPLOADS_DIR=/absolute/path/to/storage
-LARADROP_STORAGE_ENGINES.LOCAL.UPLOADS_DIR=/absolute/path/to/public/uploads
-LARADROP_STORAGE_ENGINES.LOCAL.PUBLIC_LOCATION=/uploads
+# s3, local, or Rackspace.  See 'Other Driver Prerequisites' at https://laravel.com/docs/5.2/filesystem.  Defaults to 'local'
+LARADROP_DISK=local 
+
+# If your files need to be web accessible, set this param.  S3, for example, would be 'https://s3.amazonaws.com/my-bucket'.  Defaults to the web root (public).
+LARADROP_DISK_PUBLIC_URL=/img 
+
+# If a thumbnail can not be generated due to incompatible file or any other reason, what image do you want to use? Defaults to 'vendor/jasekz/laradrop/img/genericThumbs/no-thumb.png'
+LARADROP_DEFAULT_THUMB=/img/no-thumb.png
+
+# Max file upload size in MB.  Defaults to 10.
+LARADROP_MAX_UPLOAD_SIZE=20
+
+# Max file size (in MB) for which thumbnail generation will be attempted.  If your server has an issue processing thumbs, you can lower this value.  Defaults to 10.
+LARADROP_MAX_THUMBNAIL_SIZE=10
+
+# Defaults to 150px.
+LARADROP_THUMB_WIDTH=150
+
+# Defaults to 150px.
+LARADROP_THUMB_HEIGHT=150
+
+# Run crud operations through middlware.  Defaults to none.
+LARADROP_MIDDLEWARE=web
 ```
 ## Usage
-This package requires Dropzone.js, jQuery, and jQuery UI.  Include these somewhere in your view:
+This package requires Dropzone.js, jQuery, and jQuery UI.  Include these somewhere in your template:
 ``` php
-<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet" type="text/css">
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 <script src="/vendor/jasekz/laradrop/js/enyo.dropzone.js"></script>
 <script src="/vendor/jasekz/laradrop/js/laradrop.js"></script>
 ```
 
-It is also built for Bootstrap out-of-the-box, but not a requirement.  Include Bootstrap if you'd like to use it:
+By default, Laradrop is designed for Bootstrap, but it's not a requirement.  Include Bootstrap if you'd like to use it:
 ``` php
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" type="text/css">
 ```
 
 
-Add a button where you want to implement the file manager:
+Add the html code where you'd like to implement the file manager.  Note, that by default, there is no middleware assigned to the Laradrop controller, however, it you assign middleware which contains csrf protection, you must include the `laradrop-csrf-token="{{ csrf_token() }}"` attribute.
 ``` html
-<div class="laradrop"
-  laradrop-upload-handler="{{ route('laradrop.store') }}"
-  laradrop-file-delete-handler="{{ route('laradrop.destroy', 0) }}" 
-  laradrop-file-source="{{ route('laradrop.index') }}"
-  laradrop-csrf-token="{{ csrf_token() }}" >
-  <button class='btn btn-primary laradrop-select-file' >Add File</button>
-</div>
+<div class="laradrop" laradrop-csrf-token="{{ csrf_token() }}"> </div>
 ```
 
 Finally, bind the button using jQuery:
 ```javascript
 <script>
 jQuery(document).ready(function(){
-	jQuery('.laradrop').laradrop({
-		onInsertCallback: function (src){
-		  // this is called when the 'select' button is clicked on a thumbnail
-			alert('File '+src+' selected.  Please implement onInsertCallback().');
-		}
-	});
+    // with defaults:
+    jQuery('.laradrop').laradrop();
+    
+    // with custom params
+    jQuery('.laradrop').laradrop({
+        breadCrumbRootText: 'My Root', // optional 
+        actionConfirmationText: 'Sure about that?', // optional
+        onInsertCallback: function (src){ // optional
+            // if you need to bind the select button, implement here
+             alert('File '+src+' selected.  Please implement onInsertCallback().');
+        },
+        onErrorCallback: function(msg){ // optional
+            // if you need an error status indicator, implement here
+            alert('An error occured: '+msg);
+        },
+         onSuccessCallback: function(serverRes){ // optional
+            // if you need a success status indicator, implement here
+        }
+        }); 
 });
 </script>
 ```
@@ -86,23 +105,21 @@ jQuery(document).ready(function(){
 ## Events
 Laradrop currently fires two events:
 
-1. **Jasekz\Laradrop\Events\FileWasUploaded** - this is fired as soon as the file is uploaded to the initial uploads directory, as defined by ```LARADROP_INITIAL_UPLOADS_DIR```.  At this point, the file is not yet saved in the database, thumbnails are not created and it is not moved to the final location, as defined by ```LARADROP_STORAGE_ENGINES.LOCAL.UPLOADS_DIR```.
-2. **Jasekz\Laradrop\Events\FileWasDeleted** - this is fired as soon as the file is deleted from the database.  At this point, the file and thumbnails still reside in the uploads dir, as defined by ```LARADROP_STORAGE_ENGINES.LOCAL.UPLOADS_DIR```.
+1. **Jasekz\Laradrop\Events\FileWasUploaded** - this is fired after a file has been uploaded and saved.
+2. **Jasekz\Laradrop\Events\FileWasDeleted** - this is fired after a file is deleted.
 
-## Handlers (upload, delete, list)
+## Handlers (upload, delete, list, etc)
 If you'd like to implement your own hanldlers (or extend the existing ones with your own controllers), you can do so.  All you need to do, is to defined the routes to the appropriate handlers in the button attributes.  This also allows you to easily have multiple handlers for different use cases, if so desired.
 ``` html
 <div class="laradrop"
-  laradrop-upload-handler="{{ route('laradrop.store') }}"  <!-- Redefine to point to your file storage function -->
-  
-  laradrop-file-delete-handler="{{ route('laradrop.destroy') }}" <!-- Redefine to point to your file deletion function -->
-  
-  laradrop-file-source="{{ route('laradrop.index') }}" <!-- Redefine to point to your file list function -->
-  
-  laradrop-csrf-token="{{ csrf_token() }}" >
-  
-  <button class='btn btn-primary laradrop-select-file' >My Custom Button</button>
-</div>
+    laradrop-file-source="{{ route('yourRoute.index') }}" 
+    laradrop-upload-handler="{{ route('yourRoute.store') }}"
+    laradrop-file-delete-handler="{{ route('yourRoute.destroy', 0) }}"
+    laradrop-file-move-handler="{{ route('yourRoute.move') }}"
+    laradrop-file-create-handler="{{ route('yourRoute.create') }}"
+    laradrop-containers="{{ route('yourRoute.containers') }}"
+    laradrop-csrf-token="{{ csrf_token() }}">
+</div>z
 ```
 
 

@@ -18,9 +18,9 @@ class ModifyLaradropFilesTableAddNesting extends Migration {
             $table->integer('depth')->nullable()->after('rgt');
             $table->string('type')->nullable()->after('depth');
             $table->text('meta')->nullable()->after('type');
-            $table->string('system_resource_path')->after('filename');
-            $table->string('public_resource_url')->after('system_resource_path');
+            $table->string('public_resource_url')->after('filename');
             $table->string('alias')->nullable()->after('filename');
+            $table->smallInteger('has_thumbnail')->after('type')->default(0);
         });
     }
     
@@ -39,8 +39,8 @@ class ModifyLaradropFilesTableAddNesting extends Migration {
             $table->dropColumn('type');
             $table->dropColumn('meta');
             $table->dropColumn('public_resource_url');
-            $table->dropColumn('system_resource_path');
             $table->dropColumn('alias');
+            $table->dropColumn('has_thumbnail');
         });
     }
 }
