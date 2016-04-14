@@ -6,6 +6,9 @@
 This is a file manager using Dropzone.js for Laravel 5.  It provides basic functionality for managing, uploading,
 and deleting files.
 
+## Demo
+A demo of the system can be found at http://laradrop.elegrit.com.
+
 ## Installation
 
 NOTE: If you haven't set up a database yet for your app, please do that first as per Laravel docs -  http://laravel.com/docs/5.0/database.
@@ -53,13 +56,14 @@ LARADROP_THUMB_WIDTH=150
 # Defaults to 150px.
 LARADROP_THUMB_HEIGHT=150
 
-# Run crud operations through middlware.  Defaults to none.
+# Run laradrop routes through middlware.  Defaults to none.
 LARADROP_MIDDLEWARE=web
 ```
 ## Usage
 This package requires Dropzone.js, jQuery, and jQuery UI.  Include these somewhere in your template:
 ``` php
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.min.js" ></script>
 <script src="/vendor/jasekz/laradrop/js/enyo.dropzone.js"></script>
 <script src="/vendor/jasekz/laradrop/js/laradrop.js"></script>
 ```
@@ -79,16 +83,16 @@ Finally, bind the button using jQuery:
 ```javascript
 <script>
 jQuery(document).ready(function(){
-    // with defaults:
+    // Simplest:
     jQuery('.laradrop').laradrop();
     
-    // with custom params
+    // With custom params:
     jQuery('.laradrop').laradrop({
         breadCrumbRootText: 'My Root', // optional 
         actionConfirmationText: 'Sure about that?', // optional
-        onInsertCallback: function (src){ // optional
+        onInsertCallback: function (obj){ // optional 
             // if you need to bind the select button, implement here
-             alert('File '+src+' selected.  Please implement onInsertCallback().');
+             alert('Thumb src: '+obj.src+'. File ID: '+obj.id+'.  Please implement onInsertCallback().');
         },
         onErrorCallback: function(msg){ // optional
             // if you need an error status indicator, implement here
