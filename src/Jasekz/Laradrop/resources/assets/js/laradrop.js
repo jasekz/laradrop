@@ -1,11 +1,12 @@
 jQuery.fn.laradrop = function(options) {	
     Dropzone.autoDiscover = false;
-    var fileHandler = options.fileHandler,
-    	fileDeleteHandler = options.fileDeleteHandler,
-    	fileSrc = options.fileSrc,
-    	fileCreateHandler = options.fileCreateHandler,
-    	fileMoveHandler = options.fileMoveHandler,
-    	containersUrl = options.containersUrl,
+    options = options == undefined ? {} : options;
+    var fileHandler = options.fileHandler ? options.fileHandler : 'laradrop',
+    	fileDeleteHandler = options.fileDeleteHandler ? options.fileDeleteHandler : 'laradrop/0',
+    	fileSrc = options.fileSrc ? options.fileSrc : 'laradrop',
+    	fileCreateHandler = options.fileCreateHandler ? options.fileCreateHandler : 'laradrop/create',
+    	fileMoveHandler = options.fileMoveHandler ? options.fileMoveHandler : 'laradrop/move',
+    	containersUrl = options.containersUrl ? options.containersUrl : 'laradrop/containers',
     	csrfToken = options.csrfToken,
     	csrfTokenField = options.csrfTokenField ? options.csrfTokenField : '_token',
     	actionConfirmationText = options.actionConfirmationText ? options.actionConfirmationText : 'Are you sure?',
@@ -13,7 +14,7 @@ jQuery.fn.laradrop = function(options) {
         folderImage = options.folderImage ? options.folderImage : '/vendor/jasekz/laradrop/img/genericThumbs/folder.png',
     	onInsertCallback = options.onInsertCallback ? options.onInsertCallback : null,
     	onSuccessCallback = options.onSuccessCallback ? options.onSuccessCallback : null,
-    	onErrorCallback = options.onErrorCallback ? options.onErrorCallback : null,
+    	onErrorCallback = options.onErrorCallback ? options.onErrorCallback : null;
     	uid = new Date().getTime(),
     	laradropObj = jQuery(this),
     	laradropContainer=null,
@@ -53,10 +54,8 @@ jQuery.fn.laradrop = function(options) {
    if(!containersUrl && laradropObj.attr('laradrop-containers')) {
 	   containersUrl = laradropObj.attr('laradrop-containers');
    } 
-
-   if( ! fileHandler)  return false;
    
-   // init containers & data
+   // init containers, default options & data
    jQuery.ajax({
 	    url: containersUrl,
 	    type: 'GET',
@@ -187,12 +186,12 @@ jQuery.fn.laradrop = function(options) {
 			laradropContainer.find('.laradrop-body').html(out);
 
 			laradropContainer.find('.laradrop-file-insert').click(function(){
-				var src = jQuery(this).closest('.laradrop-thumbnail').find('img').attr('src');
-				laradropContainer.find('.laradrop-file-thumb').html('<img src="'+src+'" />');
-				laradropContainer.find('.laradrop-input').val(src);
-				
+				var item = jQuery(this).closest('.laradrop-thumbnail'),
+					thumbSrc = item.find('img').attr('src'),
+					id = item.attr('file-id');
+								
 				if(onInsertCallback) {
-					eval(onInsertCallback(src));
+					eval(onInsertCallback({id:id, src:thumbSrc}));
 				}
 			});	  
 		    
@@ -310,13 +309,12 @@ jQuery.fn.laradrop = function(options) {
 		});
 	}
 	
-	function handleError(jqXHR,textStatus,errorThrown){
-		var error = jQuery.parseJSON(jqXHR.responseText);
+	function handleError(jqXHR,textStatus,errorThrown){		
 		
 		if(onErrorCallback) {
-			eval(onErrorCallback(error.msg));
+			eval(onErrorCallback(jqXHR,textStatus,errorThrown));
 		} else {
-			alert(error.msg);
+			alert(errorThrown);
 		}
 	}
 

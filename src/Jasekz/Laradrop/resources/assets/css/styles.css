@@ -1,0 +1,55 @@
+.laradrop .progress {
+    height:5px;
+}
+ 
+.laradrop-folder{
+    background:#999;
+}
+
+.laradrop-folder img{
+    cursor:pointer;
+}
+
+.laradrop-droppable-highlight {
+    background:#F7ED9C;
+}
+
+.laradrop-droppable-hover {
+    background:#73A268;
+}
+
+.laradrop-thumbnail .move {
+    cursor:move;
+}
+
+.laradrop .text-info, .laradrop h4 {
+    font-size:10px;
+}
+
+.laradrop-breadcrumbs-container {
+    position: relative;
+    top: 10px;
+}
+
+.laradrop-breadcrumbs {
+    padding:5px;
+    font-size:18px;
+}
+
+.laradrop-breadcrumbs .arrow {
+    padding: 0 10px 0 15px;
+}
+
+.laradrop-thumbnail .well {
+    background-color:#FFFCFC;
+    height:300px;
+ }
+ 
+ .laradrop-container button {
+    padding:10px;
+    font-size:18px;
+ }
+ 
+ .laradrop-previews .dz-image-preview {
+    margin-bottom:15px;
+ }

@@ -68,9 +68,10 @@ This package requires Dropzone.js, jQuery, and jQuery UI.  Include these somewhe
 <script src="/vendor/jasekz/laradrop/js/laradrop.js"></script>
 ```
 
-By default, Laradrop is designed for Bootstrap, but it's not a requirement.  Include Bootstrap if you'd like to use it:
+By default, Laradrop is designed for Bootstrap, but it's not a requirement.  Include Bootstrap and the Laradrop styles if you'd like to use it:
 ``` php
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="/vendor/jasekz/laradrop/css/styles.css" rel="stylesheet" type="text/css">
 ```
 
 
@@ -87,7 +88,7 @@ jQuery(document).ready(function(){
     jQuery('.laradrop').laradrop();
     
     // With custom params:
-    jQuery('.laradrop').laradrop({
+    jQuery('.laradrop-custom').laradrop({
         breadCrumbRootText: 'My Root', // optional 
         actionConfirmationText: 'Sure about that?', // optional
         onInsertCallback: function (obj){ // optional 
@@ -101,7 +102,7 @@ jQuery(document).ready(function(){
          onSuccessCallback: function(serverRes){ // optional
             // if you need a success status indicator, implement here
         }
-        }); 
+    }); 
 });
 </script>
 ```
