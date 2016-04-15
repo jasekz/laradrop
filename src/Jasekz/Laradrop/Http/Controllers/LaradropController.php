@@ -175,8 +175,10 @@ class LaradropController extends BaseController {
         catch (Exception $e) {
             
             // delete the file(s)
-            $disk->delete($movedFileName);
-            $disk->delete('_thumb_' . $movedFileName);
+            if( isset($disk) && $disk) {
+                $disk->delete($movedFileName);
+                $disk->delete('_thumb_' . $movedFileName);
+            }
             
             return $this->handleError($e);
         }
