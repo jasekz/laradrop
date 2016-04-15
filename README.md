@@ -32,9 +32,12 @@ followed by
 
     artisan migrate
 
+## Configuration (.env)
+
 Laradrop uses Laravel's Filesystem mechanism (https://laravel.com/docs/5.2/filesystem) and by default will store your 
 files in the `storage/app` directory.  If you would like to modify this behavior, along with other default settings, you can set your `.env` file variables:
 ```php
+
 # s3, local, or Rackspace.  See 'Other Driver Prerequisites' at https://laravel.com/docs/5.2/filesystem.  Defaults to 'local'
 LARADROP_DISK=local 
 
