@@ -10,7 +10,7 @@ and deleting files.
 A demo of the system can be found at http://laradrop.elegrit.com.
 
 ## Quick Start
-No patience and just want to see some results?  I'm the same way.  Here's an 4 step process to get a fully functional demo, similar to http://laradrop.elegrit.com.
+Here's an 4 step process to get a fully functional demo, similar to http://laradrop.elegrit.com.
 
 
 1)  Follow the **Installation**  instructions below.
