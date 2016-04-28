@@ -29,7 +29,7 @@ class File extends FileModel {
                 
                 foreach($files as $file) {
                     
-                    if( $file->has_thumbnail ) {
+                    if( $file->has_thumbnail && config('laradrop.disk_public_url')) {
                         
                         $publicResourceUrlSegments = explode('/', $file->public_resource_url);
                         $publicResourceUrlSegments[count($publicResourceUrlSegments) - 1] = '_thumb_' . $publicResourceUrlSegments[count($publicResourceUrlSegments) - 1];
