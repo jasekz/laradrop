@@ -9,6 +9,52 @@ and deleting files.
 ## Demo
 A demo of the system can be found at http://laradrop.elegrit.com.
 
+## Quick Start
+No patience and just want to see some results?  I'm the same way.  Here's an 8 step process to get a fully functional demo, similar to http://laradrop.elegrit.com.
+1. Run `composer require jasekz/laradrop`
+2. Add `Jasekz\Laradrop\LaradropServiceProvider::class` to your **config/app.php**
+3. Run `artisan vendor:publish`
+4. Run `artisan migrate` 
+    
+        Getting errors?  Make sure you have a database set up (http://laravel.com/docs/5.0/database).
+5. In a view (welcome.blade.php, for example), add:  
+```html
+<html>
+    <head>
+        <title>Laradrop Demo</title>
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+        <link href="/vendor/jasekz/laradrop/css/styles.css" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Lato:300" rel="stylesheet" type="text/css">
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script src="//code.jquery.com/ui/1.11.4/jquery-ui.min.js" ></script>
+        <script src="/vendor/jasekz/laradrop/js/enyo.dropzone.js"></script>
+        <script src="/vendor/jasekz/laradrop/js/laradrop.js"></script>
+    </head>
+    <body>
+        <div class="laradrop" laradrop-csrf-token="{{ csrf_token() }}"> </div>
+    </body>
+    <script>
+    jQuery(document).ready(function(){
+        jQuery('.laradrop').laradrop();
+    });
+    </script>
+</html>
+```
+
+6. In your **.env** file, add:
+```
+LARADROP_DISK_PUBLIC_URL=/uploads
+LARADROP_DISK=laradrop
+```
+7. In your **config/filesystems.php**, add to your `disks` array:
+```
+'laradrop' => [
+            'driver' => 'local',
+            'root' => public_path('uploads'), // will put files in public/files directory
+        ],
+```
+That's it.  If you have any issues or question, please feel free to open an issue.
+
 ## Installation
 
 NOTE: If you haven't set up a database yet for your app, please do that first as per Laravel docs -  http://laravel.com/docs/5.0/database.
@@ -83,7 +129,7 @@ Add the html code where you'd like to implement the file manager.  Note, that by
 <div class="laradrop" laradrop-csrf-token="{{ csrf_token() }}"> </div>
 ```
 
-Finally, bind the button using jQuery:
+Finally, bind it using jQuery:
 ```javascript
 <script>
 jQuery(document).ready(function(){
