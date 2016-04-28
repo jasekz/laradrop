@@ -51,7 +51,7 @@ LARADROP_DISK=laradrop
 ```
 'laradrop' => [
             'driver' => 'local',
-            'root' => public_path('uploads'), // will put files in public/files directory
+            'root' => public_path('uploads'), // will put files in 'public/upload' directory
         ],
 ```
 That's it.  If you have any issues or question, please feel free to open an issue.
