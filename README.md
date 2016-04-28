@@ -10,17 +10,14 @@ and deleting files.
 A demo of the system can be found at http://laradrop.elegrit.com.
 
 ## Quick Start
-No patience and just want to see some results?  I'm the same way.  Here's an 8 step process to get a fully functional demo, similar to http://laradrop.elegrit.com.
+No patience and just want to see some results?  I'm the same way.  Here's an 4 step process to get a fully functional demo, similar to http://laradrop.elegrit.com.
 
 
-1)  Run `composer require jasekz/laradrop`
-
-2) Add `Jasekz\Laradrop\LaradropServiceProvider::class` to your **config/app.php**
-3) Run `artisan vendor:publish`
-4) Run `artisan migrate` 
+1)  Follow the **Installation**  instructions.
     
         Getting errors?  Make sure you have a database set up (http://laravel.com/docs/5.0/database).
-5) In a view (welcome.blade.php, for example), add:  
+        
+2) In a view (welcome.blade.php, for example), add:  
 ```html
 <html>
     <head>
@@ -43,12 +40,14 @@ No patience and just want to see some results?  I'm the same way.  Here's an 8 s
     </script>
 </html>
 ```
-6) In your **.env** file, add:
+
+3) In your **.env** file, add:
+
 ```
 LARADROP_DISK_PUBLIC_URL=/uploads
 LARADROP_DISK=laradrop
 ```
-7) In your **config/filesystems.php**, add to your `disks` array:
+4) In your **config/filesystems.php**, add to your `disks` array:
 ```
 'laradrop' => [
             'driver' => 'local',
@@ -56,7 +55,6 @@ LARADROP_DISK=laradrop
         ],
 ```
 That's it.  If you have any issues or question, please feel free to open an issue.
-## End of quick start
 
 ## Installation
 
