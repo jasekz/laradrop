@@ -13,7 +13,7 @@ A demo of the system can be found at http://laradrop.elegrit.com.
 No patience and just want to see some results?  I'm the same way.  Here's an 4 step process to get a fully functional demo, similar to http://laradrop.elegrit.com.
 
 
-1)  Follow the **Installation**  instructions.
+1)  Follow the **Installation**  instructions below.
     
         Getting errors?  Make sure you have a database set up (http://laravel.com/docs/5.0/database).
         
