@@ -125,7 +125,7 @@ class LaradropController extends BaseController {
              * create thumbnail if needed
              */
             $fileData['has_thumbnail'] = 0;
-            if ($fileSize <= ( (int) config('laradrop.max_thumbnail_size') * 1000000) && in_array($fileExt, ['jpg', 'jpeg', 'png', 'gif'])) {
+            if ($fileSize <= ( (int) config('laradrop.max_thumbnail_size') * 1000000) && in_array($fileExt, ['jpg','JPG', 'jpeg','JPEG', 'png', 'PNG',  'gif', 'GIF'])) {
 
                 $thumbDims = config('laradrop.thumb_dimensions');
                 $img = Image::make($tmpStorage . '/' . $movedFileName);
