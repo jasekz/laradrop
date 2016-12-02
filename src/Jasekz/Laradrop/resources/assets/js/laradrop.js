@@ -1,14 +1,16 @@
 jQuery.fn.laradrop = function(options) {	
     Dropzone.autoDiscover = false;
     options = options == undefined ? {} : options;
-    var fileHandler = options.fileHandler ? options.fileHandler : 'laradrop',
-    	fileDeleteHandler = options.fileDeleteHandler ? options.fileDeleteHandler : 'laradrop/0',
-    	fileSrc = options.fileSrc ? options.fileSrc : 'laradrop',
-    	fileCreateHandler = options.fileCreateHandler ? options.fileCreateHandler : 'laradrop/create',
-    	fileMoveHandler = options.fileMoveHandler ? options.fileMoveHandler : 'laradrop/move',
-    	containersUrl = options.containersUrl ? options.containersUrl : 'laradrop/containers',
-    	csrfToken = options.csrfToken,
-    	csrfTokenField = options.csrfTokenField ? options.csrfTokenField : '_token',
+
+    var laradropObj = jQuery(this),
+		fileHandler = options.fileHandler ? options.fileHandler : ( laradropObj.attr('laradrop-upload-handler') ? laradropObj.attr('laradrop-upload-handler') : 'laradrop'),
+    	fileDeleteHandler = options.fileDeleteHandler ? options.fileDeleteHandler : ( laradropObj.attr('laradrop-file-delete-handler') ? laradropObj.attr('laradrop-file-delete-handler') : 'laradrop/0'),
+    	fileSrc = options.fileSrc ? options.fileSrc : ( laradropObj.attr('laradrop-file-source') ? laradropObj.attr('laradrop-file-source') : 'laradrop'),
+    	fileCreateHandler = options.fileCreateHandler ? options.fileCreateHandler : ( laradropObj.attr('laradrop-file-create-handler') ? laradropObj.attr('laradrop-file-create-handler') : 'laradrop/create'),
+    	fileMoveHandler = options.fileMoveHandler ? options.fileMoveHandler : ( laradropObj.attr('laradrop-file-move-handler') ? laradropObj.attr('laradrop-file-move-handler') : 'laradrop/move'),
+    	containersUrl = options.containersUrl ? options.containersUrl : ( laradropObj.attr('laradrop-containers') ? laradropObj.attr('laradrop-containers') : 'laradrop/containers'),
+    	csrfToken = options.csrfToken ? options.csrfToken : ( laradropObj.attr('laradrop-csrf-token') ? laradropObj.attr('laradrop-csrf-token') : null ),
+    	csrfTokenField = options.csrfTokenField ? options.csrfTokenField : ( laradropObj.attr('laradrop-csrf-token-field') ? laradropObj.attr('laradrop-csrf-token-field') : '_token'),
     	actionConfirmationText = options.actionConfirmationText ? options.actionConfirmationText : 'Are you sure?',
     	breadCrumbRootText = options.breadCrumbRootText ? options.breadCrumbRootText : 'Root Directory',
         folderImage = options.folderImage ? options.folderImage : '/vendor/jasekz/laradrop/img/genericThumbs/folder.png',
@@ -16,7 +18,6 @@ jQuery.fn.laradrop = function(options) {
     	onSuccessCallback = options.onSuccessCallback ? options.onSuccessCallback : null,
     	onErrorCallback = options.onErrorCallback ? options.onErrorCallback : null;
     	uid = new Date().getTime(),
-    	laradropObj = jQuery(this),
     	laradropContainer=null,
     	laradropPreviewContainer=null,
     	dz=null,
@@ -28,32 +29,6 @@ jQuery.fn.laradrop = function(options) {
     		preview: null,
     		file: null
     	};
- 
-   // try html atttributes if not set in options
-   if(!fileHandler && laradropObj.attr('laradrop-upload-handler')) {
-	   fileHandler = laradropObj.attr('laradrop-upload-handler');
-   }   
-   if(!fileMoveHandler && laradropObj.attr('laradrop-file-move-handler')) {
-	   fileMoveHandler = laradropObj.attr('laradrop-file-move-handler');
-   }   
-   if(!fileDeleteHandler && laradropObj.attr('laradrop-file-delete-handler')) {
-	   fileDeleteHandler = laradropObj.attr('laradrop-file-delete-handler');
-   }   
-   if(!fileSrc && laradropObj.attr('laradrop-file-source')) {
-	   fileSrc = laradropObj.attr('laradrop-file-source');
-   }   
-   if(!csrfToken  && laradropObj.attr('laradrop-csrf-token')) {
-	   csrfToken = laradropObj.attr('laradrop-csrf-token');
-   }   
-   if(!csrfTokenField && laradropObj.attr('laradrop-csrf-token-field')) {
-	   csrfTokenField = laradropObj.attr('laradrop-csrf-token-field');
-   }  
-   if(!fileCreateHandler && laradropObj.attr('laradrop-file-create-handler')) {
-	   fileCreateHandler = laradropObj.attr('laradrop-file-create-handler');
-   }   
-   if(!containersUrl && laradropObj.attr('laradrop-containers')) {
-	   containersUrl = laradropObj.attr('laradrop-containers');
-   } 
    
    // init containers, default options & data
    jQuery.ajax({
