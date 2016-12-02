@@ -28,7 +28,13 @@ class LaradropServiceProvider extends ServiceProvider {
      */
     public function boot(DispatcherContract $events)
     {
-        parent::boot($events);
+        // different constructor signature for 5.3+
+        if(\App::version() >= '5.3.0') {            
+            parent::boot();
+        }        
+        else {            
+            parent::boot($events);
+        }
         
         if (! $this->app->routesAreCached()) {
             require __DIR__ . '/Http/routes.php';
