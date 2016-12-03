@@ -26,7 +26,7 @@ class LaradropServiceProvider extends ServiceProvider {
      *
      * @return void
      */
-    public function boot(DispatcherContract $events)
+    public function boot(DispatcherContract $events = null)
     {
         // different constructor signature for 5.3+
         if(\App::version() >= '5.3.0') {            
