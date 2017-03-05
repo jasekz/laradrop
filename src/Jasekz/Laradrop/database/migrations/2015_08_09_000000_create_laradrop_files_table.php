@@ -14,7 +14,7 @@ class CreateLaradropFilesTable extends Migration {
         Schema::create('laradrop_files', function (Blueprint $table)
         {            
             $table->increments('id');
-            $table->string('filename');
+            $table->string('filename')->nullable(); 
             $table->timestamps();
         });
     }
