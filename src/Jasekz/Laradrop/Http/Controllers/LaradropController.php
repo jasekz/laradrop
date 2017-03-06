@@ -167,7 +167,14 @@ class LaradropController extends BaseController {
                 'file'     => $file,
                 'postData' => Input::all()
             ]));
-            
+            /* if we have thumbnail, we change filename to thumbnail for client side update */
+            if( $file->has_thumbnail ) {
+                $publicResourceUrlSegments = explode('/', $file->public_resource_url);
+                $publicResourceUrlSegments[count($publicResourceUrlSegments) - 1] = '_thumb_' . $publicResourceUrlSegments[count($publicResourceUrlSegments) - 1];
+                $file->filename = implode('/', $publicResourceUrlSegments);
+            } else {
+                $file->filename = config('laradrop.default_thumbnail_url');
+            }
             return $file;
             
         } 
