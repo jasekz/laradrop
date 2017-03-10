@@ -18,7 +18,7 @@
         "baum/baum": "~1.1"
     },
     "autoload": {
-        "psr-0": {"Jasekz\\Laradrop": "src"}
+        "psr-0": {"jjfs85\\Laradrop": "src"}
     },
     "minimum-stability": "dev"
 }
