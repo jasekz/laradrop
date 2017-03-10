@@ -1,13 +1,13 @@
 {
-    "name": "jasekz/laradrop",
+    "name": "jjfs85/laradrop",
     "description": "File manager using Dropzone.js for Laravel 5",
     "keywords": ["php","laravel 5","dropzone.js","file manager","file upload"],
     "license": "MIT",
     "authors": [
         {
-            "name": "Jasek Zbigniew",
-            "email": "zig@elegrit.com",
-            "homepage": "http://elegrit.com"
+            "name": "John Scimone",
+            "email": "john@scimone.net",
+            "homepage": "http://spark.coop"
         }
     ],
     "require": {
@@ -18,7 +18,7 @@
         "baum/baum": "~1.1"
     },
     "autoload": {
-        "psr-0": {"Jasekz\\Laradrop": "src"}
+        "psr-0": {"jjfs85\\Laradrop": "src"}
     },
     "minimum-stability": "dev"
 }
