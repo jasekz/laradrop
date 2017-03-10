@@ -14,7 +14,7 @@ return [
     'thumb_aspect' => env('LARADROP_THUMB_ASPECT', true),
     
     // default thumbnail (if one can not be generated)
-    'default_thumbnail_url' => env('LARADROP_DEFAULT_THUMB', '/vendor/jasekz/laradrop/img/genericThumbs/no-thumb.png'),
+    'default_thumbnail_url' => env('LARADROP_DEFAULT_THUMB', '/vendor/jjfs85/laradrop/img/genericThumbs/no-thumb.png'),
     
     // storage location - use config/filesystems.php 'disks'
     'disk' => env('LARADROP_DISK', 'local'),
