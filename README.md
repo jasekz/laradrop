@@ -23,12 +23,12 @@ Here's an 4 step process to get a fully functional demo, similar to http://larad
     <head>
         <title>Laradrop Demo</title>
         <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-        <link href="/vendor/jasekz/laradrop/css/styles.css" rel="stylesheet" type="text/css">
+        <link href="/vendor/jjfs85/laradrop/css/styles.css" rel="stylesheet" type="text/css">
         <link href="https://fonts.googleapis.com/css?family=Lato:300" rel="stylesheet" type="text/css">
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
         <script src="//code.jquery.com/ui/1.11.4/jquery-ui.min.js" ></script>
-        <script src="/vendor/jasekz/laradrop/js/enyo.dropzone.js"></script>
-        <script src="/vendor/jasekz/laradrop/js/laradrop.js"></script>
+        <script src="/vendor/jjfs85/laradrop/js/enyo.dropzone.js"></script>
+        <script src="/vendor/jjfs85/laradrop/js/laradrop.js"></script>
     </head>
     <body>
         <div class="laradrop" laradrop-csrf-token="{{ csrf_token() }}"> </div>
@@ -62,7 +62,7 @@ NOTE: If you haven't set up a database yet for your app, please do that first as
 
 Via composer
 ```
-composer require jasekz/laradrop
+composer require jjfs85/laradrop
 ```
 
 Then in your `config/app.php` add 
@@ -91,7 +91,7 @@ LARADROP_DISK=local
 # If your files need to be web accessible, set this param.  S3, for example, would be 'https://s3.amazonaws.com/my-bucket'.  Defaults to the web root (public).
 LARADROP_DISK_PUBLIC_URL=/img 
 
-# If a thumbnail can not be generated due to incompatible file or any other reason, what image do you want to use? Defaults to 'vendor/jasekz/laradrop/img/genericThumbs/no-thumb.png'
+# If a thumbnail can not be generated due to incompatible file or any other reason, what image do you want to use? Defaults to 'vendor/jjfs85/laradrop/img/genericThumbs/no-thumb.png'
 LARADROP_DEFAULT_THUMB=/img/no-thumb.png
 
 # Max file upload size in MB.  Defaults to 10.
@@ -114,14 +114,14 @@ This package requires Dropzone.js, jQuery, and jQuery UI.  Include these somewhe
 ``` php
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.min.js" ></script>
-<script src="/vendor/jasekz/laradrop/js/enyo.dropzone.js"></script>
-<script src="/vendor/jasekz/laradrop/js/laradrop.js"></script>
+<script src="/vendor/jjfs85/laradrop/js/enyo.dropzone.js"></script>
+<script src="/vendor/jjfs85/laradrop/js/laradrop.js"></script>
 ```
 
 By default, Laradrop is designed for Bootstrap, but it's not a requirement.  Include Bootstrap and the Laradrop styles if you'd like to use it:
 ``` php
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-<link href="/vendor/jasekz/laradrop/css/styles.css" rel="stylesheet" type="text/css">
+<link href="/vendor/jjfs85/laradrop/css/styles.css" rel="stylesheet" type="text/css">
 ```
 
 

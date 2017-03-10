@@ -49,7 +49,7 @@ class LaradropServiceProvider extends ServiceProvider {
         ], 'migrations');
         
         $this->publishes([
-            __DIR__ . '/resources/assets' => public_path('vendor/jasekz/laradrop')
+            __DIR__ . '/resources/assets' => public_path('vendor/jjfs85/laradrop')
         ], 'public');
         
         $this->loadViewsFrom(__DIR__ . '/resources/views', 'laradrop');
