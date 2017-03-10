@@ -129,7 +129,7 @@ class LaradropController extends BaseController {
 
                 $thumbDims = config('laradrop.thumb_dimensions');
                 $img = Image::make($tmpStorage . '/' . $movedFileName);
-                if(config('laradrop.aspect_ratio')){
+                if(config('laradrop.thumb_aspect')){
                     $img->resize($thumbDims['width'], null, function ($constraint) {
                         $constraint->aspectRatio();
                     });
