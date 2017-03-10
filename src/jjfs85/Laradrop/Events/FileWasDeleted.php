@@ -1,5 +1,5 @@
 <?php
-namespace Jasekz\Laradrop\Events;
+namespace jjfs85\Laradrop\Events;
 
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;

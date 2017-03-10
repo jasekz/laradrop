@@ -1,9 +1,9 @@
 <?php
-namespace Jasekz\Laradrop;
+namespace jjfs85\Laradrop;
 
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Jasekz\Laradrop\Services\File as FileService;
+use jjfs85\Laradrop\Services\File as FileService;
 use Config;
 use File;
 use Storage;
@@ -16,8 +16,8 @@ class LaradropServiceProvider extends ServiceProvider {
      * @var array
      */
     protected $listen = [
-        'Jasekz\Laradrop\Events\FileWasDeleted' => [
-            'Jasekz\Laradrop\Handlers\Events\DeleteFile',
+        'jjfs85\Laradrop\Events\FileWasDeleted' => [
+            'jjfs85\Laradrop\Handlers\Events\DeleteFile',
         ],
     ];
 

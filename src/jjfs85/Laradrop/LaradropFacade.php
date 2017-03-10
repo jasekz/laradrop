@@ -1,5 +1,5 @@
 <?php
-namespace Jasekz\Laradrop;
+namespace jjfs85\Laradrop;
 
 use Illuminate\Support\Facades\Facade;
 

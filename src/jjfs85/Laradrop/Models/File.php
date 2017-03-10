@@ -1,5 +1,5 @@
 <?php
-namespace Jasekz\Laradrop\Models;
+namespace jjfs85\Laradrop\Models;
 
 use Baum\Node;
 

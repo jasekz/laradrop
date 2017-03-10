@@ -67,7 +67,7 @@ composer require jasekz/laradrop
 
 Then in your `config/app.php` add 
 ```php
-    'Jasekz\Laradrop\LaradropServiceProvider'
+    'jjfs85\Laradrop\LaradropServiceProvider'
 ```    
 to the `providers` array.
 
@@ -160,8 +160,8 @@ jQuery(document).ready(function(){
 ## Events
 Laradrop currently fires two events:
 
-1. **Jasekz\Laradrop\Events\FileWasUploaded** - this is fired after a file has been uploaded and saved.
-2. **Jasekz\Laradrop\Events\FileWasDeleted** - this is fired after a file is deleted.
+1. **jjfs85\Laradrop\Events\FileWasUploaded** - this is fired after a file has been uploaded and saved.
+2. **jjfs85\Laradrop\Events\FileWasDeleted** - this is fired after a file is deleted.
 
 ## Handlers (upload, delete, list, etc)
 If you'd like to implement your own hanldlers (or extend the existing ones with your own controllers), you can do so.  All you need to do, is to defined the routes to the appropriate handlers in the button attributes.  This also allows you to easily have multiple handlers for different use cases, if so desired.

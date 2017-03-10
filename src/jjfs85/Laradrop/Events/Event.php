@@ -1,5 +1,5 @@
 <?php
-namespace Jasekz\Laradrop\Events;
+namespace jjfs85\Laradrop\Events;
 
 abstract class Event {
     //
