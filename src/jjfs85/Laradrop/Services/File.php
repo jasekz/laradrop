@@ -1,8 +1,8 @@
 <?php
-namespace Jasekz\Laradrop\Services;
+namespace jjfs85\Laradrop\Services;
 
-use Jasekz\Laradrop\Models\File as FileModel;
-use Jasekz\Laradrop\Events\FileWasDeleted;
+use jjfs85\Laradrop\Models\File as FileModel;
+use jjfs85\Laradrop\Events\FileWasDeleted;
 use Exception, Config;
 
 class File extends FileModel {

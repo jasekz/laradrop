@@ -1,13 +1,13 @@
 <?php
-namespace Jasekz\Laradrop\Http\Controllers;
+namespace jjfs85\Laradrop\Http\Controllers;
 
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Support\Facades\Input;
 use Intervention\Image\ImageManagerStatic as Image;
-use Jasekz\Laradrop\Services\File as FileService;
-use Jasekz\Laradrop\Events\FileWasUploaded;
+use jjfs85\Laradrop\Services\File as FileService;
+use jjfs85\Laradrop\Events\FileWasUploaded;
 use Request, Exception, File, Storage;
 
 class LaradropController extends BaseController {

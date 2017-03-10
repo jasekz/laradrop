@@ -1,7 +1,7 @@
 <?php
-namespace Jasekz\Laradrop\Handlers\Events;
+namespace jjfs85\Laradrop\Handlers\Events;
 
-use Jasekz\Laradrop\Events\FileWasDeleted;
+use jjfs85\Laradrop\Events\FileWasDeleted;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Exception, Storage;
