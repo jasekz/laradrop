@@ -1,3 +1,4 @@
+*This uses SoftDelete*
 # Laradrop
 
 [![Software License][ico-license]](LICENSE.md)
