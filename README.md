@@ -176,7 +176,7 @@ If you'd like to implement your own hanldlers (or extend the existing ones with 
     laradrop-containers="{{ route('yourRoute.containers') }}"
     laradrop-csrf-token="{{ csrf_token() }}"
     laradrop-allow=".pdf">
-</div>z
+</div>
 ```
 ## File type validations
 The default implementation of accept checks the file's mime type or extension against this list. This is a comma separated list of mime types or file extensions.
