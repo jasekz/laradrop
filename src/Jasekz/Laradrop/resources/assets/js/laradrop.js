@@ -68,8 +68,11 @@ jQuery.fn.laradrop = function(options) {
 		   })
 		   
 		   // 'add files' 
-		   if(fileHandler) {
+			$allowedFormats = $('#' + laradropContainer.attr('id')).parent().attr('laradrop-allow');
+			$acceptedFiles = $allowedFormats ? $allowedFormats : '*';
+		   	if(fileHandler) {
 			   dz = new Dropzone('#'+laradropContainer.attr('id')+' .btn-add-files', { 
+				   	acceptedFiles: $acceptedFiles,
 			        url: fileHandler,
 			        autoQueue:false,
 			        previewsContainer: "#laradrop-previews-"+uid, 

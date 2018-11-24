@@ -1,3 +1,4 @@
+*This uses SoftDelete*
 # Laradrop
 
 [![Software License][ico-license]](LICENSE.md)
@@ -173,10 +174,16 @@ If you'd like to implement your own hanldlers (or extend the existing ones with 
     laradrop-file-move-handler="{{ route('yourRoute.move') }}"
     laradrop-file-create-handler="{{ route('yourRoute.create') }}"
     laradrop-containers="{{ route('yourRoute.containers') }}"
-    laradrop-csrf-token="{{ csrf_token() }}">
-</div>z
+    laradrop-csrf-token="{{ csrf_token() }}"
+    laradrop-allow=".pdf">
+</div>
 ```
+## File type validations
+The default implementation of accept checks the file's mime type or extension against this list. This is a comma separated list of mime types or file extensions.
 
+Eg.: image/*,application/pdf,.psd
+
+If the Dropzone is clickable this option will also be used as accept parameter on the hidden file input as well.
 
 ## License
 

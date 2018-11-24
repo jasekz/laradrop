@@ -2,10 +2,11 @@
 namespace Jasekz\Laradrop\Models;
 
 use Baum\Node;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class File extends Node { 
 
-
+    use SoftDeletes;
     /**
      * The database table used by the model.
      *
