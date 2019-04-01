@@ -9,6 +9,9 @@ return [
     
     // dimensions for thumbnail generator
     'thumb_dimensions' => ['width' => env('LARADROP_THUMB_WIDTH', 150), 'height' => env('LARADROP_THUMB_HEIGHT', 150)],
+
+    // when true, the thumbnail sizes will be based solely on the width set above
+    'thumb_aspect' => env('LARADROP_THUMB_ASPECT', true),
     
     // default thumbnail (if one can not be generated)
     'default_thumbnail_url' => env('LARADROP_DEFAULT_THUMB', '/vendor/jasekz/laradrop/img/genericThumbs/no-thumb.png'),
