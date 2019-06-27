@@ -15,7 +15,7 @@
         "illuminate/support": "~5.0",
         "ext-fileinfo": "*",
         "intervention/image": "2.*",        
-        "baum/baum": "~1.1|v2.x-dev"
+        "baum/baum": "v2.x-dev"
     },
     "autoload": {
         "psr-0": {"Jasekz\\Laradrop": "src"}
