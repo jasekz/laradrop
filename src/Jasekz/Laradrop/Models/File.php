@@ -1,10 +1,12 @@
 <?php
+
 namespace Jasekz\Laradrop\Models;
 
-use Baum\Node;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class File extends Node { 
+class File extends Model
+{
 
     use SoftDeletes;
     /**
@@ -20,7 +22,7 @@ class File extends Node {
      * @var array
      */
     protected $fillable = [
-        'filename', 'parent_id', 'type', 'system_resource_path', 'public_resource_url', 'meta', 'alias', 'has_thumbnail', 
+        'filename', 'parent_id', 'type', 'system_resource_path', 'public_resource_url', 'meta', 'alias', 'has_thumbnail',
     ];
 
 }
