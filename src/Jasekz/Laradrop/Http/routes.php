@@ -16,6 +16,6 @@ Route::group(['middleware' => config('laradrop.middleware') ? config('laradrop.m
         'uses' => '\Jasekz\Laradrop\Http\Controllers\LaradropController@create',
     ]);
 
-    Route::resource('laradrop', '\Jasekz\Laradrop\Http\Controllers\LaradropController');
+    Route::resource('laradrop', '\Jasekz\Laradrop\Http\Controllers\LaradropController')->except(['create']);
 
 });
