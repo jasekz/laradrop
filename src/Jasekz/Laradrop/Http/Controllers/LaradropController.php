@@ -107,7 +107,7 @@ class LaradropController extends BaseController {
              * move file to temp location
              */
             $fileExt = Input::file('file')->getClientOriginalExtension();
-            $fileName = str_replace('.' . $fileExt, '', Input::file('file')->getClientOriginalName()) . '-' . date('Ymdhis');
+            $fileName = str_slug(str_replace('.' . $fileExt, '', Input::file('file')->getClientOriginalName()), '-') . '-' . date('Ymdhis');
             $mimeType = Request::file('file')->getMimeType();
             $tmpStorage = storage_path();
             $movedFileName = $fileName . '.' . $fileExt;
