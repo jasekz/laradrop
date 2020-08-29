@@ -3,9 +3,8 @@
 namespace Jasekz\Laradrop\Handlers\Events;
 
 use Exception;
-use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Support\Facades\Storage;
 use Jasekz\Laradrop\Events\FileWasDeleted;
-use Storage;
 
 class DeleteFile
 {

@@ -1,15 +1,12 @@
 <?php
+
 namespace Jasekz\Laradrop;
 
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Jasekz\Laradrop\Services\File as FileService;
-use Config;
-use File;
-use Storage;
 
-class LaradropServiceProvider extends ServiceProvider {
-
+class LaradropServiceProvider extends ServiceProvider
+{
     /**
      * The event handler mappings for the application.
      *
@@ -24,36 +21,36 @@ class LaradropServiceProvider extends ServiceProvider {
     /**
      * Bootstrap the application services.
      *
+     * @param DispatcherContract|null $events
      * @return void
      */
     public function boot(DispatcherContract $events = null)
     {
         // different constructor signature for 5.3+
-        if(\App::version() >= '5.3.0') {            
+        if (\App::version() >= '5.3.0') {
             parent::boot();
-        }        
-        else {            
+        } else {
             parent::boot($events);
         }
-        
-        if (! $this->app->routesAreCached()) {
+
+        if (!$this->app->routesAreCached()) {
             require __DIR__ . '/Http/routes.php';
         }
-        
+
         $this->publishes([
             __DIR__ . '/config/config.php' => config_path('laradrop.php')
         ]);
-        
+
         $this->publishes([
             __DIR__ . '/database/migrations/' => database_path('migrations')
         ], 'migrations');
-        
+
         $this->publishes([
             __DIR__ . '/resources/assets' => public_path('vendor/jasekz/laradrop')
         ], 'public');
-        
+
         $this->loadViewsFrom(__DIR__ . '/resources/views', 'laradrop');
-        
+
         $this->loadTranslationsFrom(__DIR__ . '/resources/lang', 'laradrop');
     }
 
@@ -63,6 +60,7 @@ class LaradropServiceProvider extends ServiceProvider {
      * @return void
      */
     public function register()
-    {        
+    {
+        //
     }
 }

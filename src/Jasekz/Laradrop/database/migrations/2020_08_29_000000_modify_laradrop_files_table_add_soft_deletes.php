@@ -4,7 +4,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\Schema;
 
-class CreateLaradropFilesTable extends Migration
+class ModifyLaradropFilesTableAddSoftDeletes extends Migration
 {
 
     /**
@@ -14,14 +14,11 @@ class CreateLaradropFilesTable extends Migration
      */
     public function up()
     {
-        Schema::create('laradrop_files', function (Blueprint $table)
-        {            
-            $table->increments('id');
-            $table->string('filename')->nullable(); 
-            $table->timestamps();
+        Schema::table('laradrop_files', function (Blueprint $table) {
+            $table->softDeletes();
         });
     }
-    
+
     /**
      * Reverse the migrations.
      *
@@ -29,6 +26,8 @@ class CreateLaradropFilesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('laradrop_files');
+        Schema::table('laradrop_files', function (Blueprint $table) {
+            $table->dropSoftDeletes();
+        });
     }
 }
