@@ -1,4 +1,7 @@
 <?php
+
+use Illuminate\Support\Facades\Route;
+
 Route::group(['middleware' => config('laradrop.middleware') ? config('laradrop.middleware') : null], function () {
 
     Route::get('laradrop/containers', [

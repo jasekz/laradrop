@@ -1,33 +1,46 @@
 {
-  "name": "jasekz/laradrop",
-  "description": "File manager using Dropzone.js for Laravel 5",
-  "keywords": [
-    "php",
-    "laravel 5",
-    "laravel 6",
-    "dropzone.js",
-    "file manager",
-    "file upload"
-  ],
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Jasek Zbigniew",
-      "email": "zig@elegrit.com",
-      "homepage": "http://elegrit.com"
-    }
-  ],
-  "require": {
-    "php": ">=5.4.0",
-    "illuminate/support": "~5.0|^6.0|^7.0",
-    "ext-fileinfo": "*",
-    "intervention/image": "2.*",
-    "illuminate/database": "~5.0|^6.0|^7.0"
-  },
-  "autoload": {
-    "psr-0": {
-      "Jasekz\\Laradrop": "src"
-    }
-  },
-  "minimum-stability": "dev"
+    "name": "jasekz/laradrop",
+    "description": "File manager using Dropzone.js for Laravel 5, Laravel 6 and Laravel 7",
+    "keywords": [
+        "php",
+        "laravel 5",
+        "laravel 6",
+        "laravel 7",
+        "dropzone.js",
+        "file manager",
+        "file upload"
+    ],
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jasek Zbigniew",
+            "email": "zig@elegrit.com",
+            "homepage": "http://elegrit.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "illuminate/support": "~5.0|^6.0|^7.0",
+        "ext-fileinfo": "*",
+        "intervention/image": "2.*",
+        "illuminate/database": "~5.0|^6.0|^7.0",
+        "ext-json": "*",
+        "illuminate/routing": "~5.0|^6.0|^7.0",
+        "illuminate/queue": "~5.0|^6.0|^7.0"
+    },
+    "autoload": {
+        "psr-0": {
+            "Jasekz\\Laradrop": "src"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Jasekz\\Laradrop\\LaradropServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

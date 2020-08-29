@@ -3,23 +3,21 @@
 namespace Jasekz\Laradrop\Http\Controllers;
 
 use Exception;
-use File;
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManagerStatic as Image;
 use Jasekz\Laradrop\Events\FileWasUploaded;
 use Jasekz\Laradrop\Services\File as FileService;
-use Request;
-use Storage;
 
 class LaradropController extends BaseController
 {
+    public $file;
 
     /**
-     * Constructor
-     *
-     * @param File $file
+     * LaradropController constructor.
+     * @param FileService $file
      */
     public function __construct(FileService $file)
     {
@@ -109,11 +107,11 @@ class LaradropController extends BaseController
     {
         try {
 
-            if (! Request::hasFile('file')) {
+            if (!Request::hasFile('file')) {
                 throw new Exception(trans('err.fileNotProvided'));
             }
 
-            if (! Request::file('file')->isValid()) {
+            if (!Request::file('file')->isValid()) {
                 throw new Exception(trans('err.invalidFile'));
             }
 
@@ -127,7 +125,7 @@ class LaradropController extends BaseController
             $movedFileName = $fileName . '.' . $fileExt;
             $fileSize = Request::file('file')->getSize();
 
-            if ($fileSize > ((int) config('laradrop.max_upload_size') * 1000000)) {
+            if ($fileSize > ((int)config('laradrop.max_upload_size') * 1000000)) {
                 throw new Exception(trans('err.invalidFileSize'));
             }
 
@@ -139,7 +137,7 @@ class LaradropController extends BaseController
              * create thumbnail if needed
              */
             $fileData['has_thumbnail'] = 0;
-            if ($fileSize <= ((int) config('laradrop.max_thumbnail_size') * 1000000) && in_array($mimeType, ["image/jpg", "image/jpeg", "image/png", "image/gif"])) {
+            if ($fileSize <= ((int)config('laradrop.max_thumbnail_size') * 1000000) && in_array($mimeType, ["image/jpg", "image/jpeg", "image/png", "image/gif"])) {
 
                 $thumbDims = config('laradrop.thumb_dimensions');
                 $img = Image::make($tmpStorage . '/' . $movedFileName);
