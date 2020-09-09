@@ -4,7 +4,7 @@
 [![Software License][ico-license]](LICENSE.md)
 
 
-This is a file manager using Dropzone.js for Laravel 5, 6, 7.  It provides basic functionality for managing, uploading,
+This is a file manager using Dropzone.js for Laravel 5, 6, 7, 8.  It provides basic functionality for managing, uploading,
 and deleting files.
 
 ## Demo
