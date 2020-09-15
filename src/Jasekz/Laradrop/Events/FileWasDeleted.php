@@ -1,11 +1,14 @@
 <?php
+
 namespace Jasekz\Laradrop\Events;
 
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class FileWasDeleted extends Event {
+class FileWasDeleted extends Event
+{
     use SerializesModels;
+
+    public $data;
 
     /**
      * Create a new event instance.

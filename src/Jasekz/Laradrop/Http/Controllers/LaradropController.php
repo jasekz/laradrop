@@ -1,41 +1,43 @@
 <?php
+
 namespace Jasekz\Laradrop\Http\Controllers;
 
-use Illuminate\Foundation\Bus\DispatchesJobs;
+use Exception;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManagerStatic as Image;
-use Jasekz\Laradrop\Services\File as FileService;
 use Jasekz\Laradrop\Events\FileWasUploaded;
-use Request, Exception, File, Storage;
+use Jasekz\Laradrop\Services\File as FileService;
 
-class LaradropController extends BaseController {
+class LaradropController extends BaseController
+{
+    public $file;
 
     /**
-     * Constructor
-     *
-     * @param File $file         
+     * LaradropController constructor.
+     * @param FileService $file
      */
     public function __construct(FileService $file)
     {
         $this->file = $file;
     }
-    
+
     /**
      * Return html containers
-     * 
+     *
      * @return JsonResponse
      */
     public function getContainers()
-    {        
+    {
         return response()->json([
             'status' => 'success',
             'data' => [
                 'main' => view('laradrop::mainContainer')->render(),
                 'preview' => view('laradrop::previewContainer')->render(),
                 'file' => view('laradrop::fileContainer')->render(),
-            ]
+            ],
         ]);
     }
 
@@ -46,42 +48,52 @@ class LaradropController extends BaseController {
      */
     public function index()
     {
-        try {            
-            $files = $this->file->get(Input::get('pid'));
-            
+        try {
+            $files = $this->file->get(Request::input('pid'));
+
             return response()->json([
                 'status' => 'success',
                 'data' => $files,
             ]);
-        }
-        
-        catch (Exception $e) {
+        } catch (Exception $e) {
             return $this->handleError($e);
         }
     }
-    
+
     /**
-     * Create a folder
-     * 
+     * Error handler for this controller
+     *
+     * @param Exception $e
+     *
      * @return JsonResponse
      */
-    public function create() 
+    private function handleError(Exception $e)
     {
-        try {            
-            $fileData['alias'] = Input::get('filename') ? Input::get('filename') : date('m.d.Y - G:i:s');
+        return response()->json([
+            'msg' => $e->getMessage(),
+        ], 401);
+    }
+
+    /**
+     * Create a folder
+     *
+     * @return JsonResponse
+     */
+    public function create()
+    {
+        try {
+            $fileData['alias'] = Request::input('filename') ? Request::input('filename') : date('m.d.Y - G:i:s');
             $fileData['type'] = 'folder';
-            if(Input::get('pid') > 0) {
-                $fileData['parent_id'] = Input::get('pid');
+            if (Request::input('pid') > 0) {
+                $fileData['parent_id'] = Request::input('pid');
             }
-            
+
             $this->file->create($fileData);
 
             return response()->json([
-                'status' => 'success'
+                'status' => 'success',
             ]);
-        }
-        
-        catch (Exception $e) {
+        } catch (Exception $e) {
             return $this->handleError($e);
         }
     }
@@ -95,37 +107,37 @@ class LaradropController extends BaseController {
     {
         try {
 
-            if (! Request::hasFile('file')) {
+            if (!Request::hasFile('file')) {
                 throw new Exception(trans('err.fileNotProvided'));
             }
-            
-            if( ! Request::file('file')->isValid()) {
+
+            if (!Request::file('file')->isValid()) {
                 throw new Exception(trans('err.invalidFile'));
             }
-            
+
             /*
              * move file to temp location
              */
-            $fileExt = Input::file('file')->getClientOriginalExtension();
-            $fileName = str_replace('.' . $fileExt, '', Input::file('file')->getClientOriginalName()) . '-' . date('Ymdhis');
+            $fileExt = Request::file('file')->getClientOriginalExtension();
+            $fileName = str_replace('.' . $fileExt, '', Request::file('file')->getClientOriginalName()) . '-' . date('Ymdhis');
             $mimeType = Request::file('file')->getMimeType();
             $tmpStorage = storage_path();
             $movedFileName = $fileName . '.' . $fileExt;
-            $fileSize = Input::file('file')->getSize();
+            $fileSize = Request::file('file')->getSize();
 
-            if($fileSize > ( (int) config('laradrop.max_upload_size') * 1000000) ) {
+            if ($fileSize > ((int)config('laradrop.max_upload_size') * 1000000)) {
                 throw new Exception(trans('err.invalidFileSize'));
             }
-            
+
             Request::file('file')->move($tmpStorage, $movedFileName);
-            
+
             $disk = Storage::disk(config('laradrop.disk'));
 
             /*
              * create thumbnail if needed
              */
             $fileData['has_thumbnail'] = 0;
-            if ($fileSize <= ( (int) config('laradrop.max_thumbnail_size') * 1000000) && in_array($mimeType, ["image/jpg", "image/jpeg", "image/png", "image/gif"])) {
+            if ($fileSize <= ((int)config('laradrop.max_thumbnail_size') * 1000000) && in_array($mimeType, ["image/jpg", "image/jpeg", "image/png", "image/gif"])) {
 
                 $thumbDims = config('laradrop.thumb_dimensions');
                 $img = Image::make($tmpStorage . '/' . $movedFileName);
@@ -134,58 +146,56 @@ class LaradropController extends BaseController {
 
                 // move thumbnail to final location
                 $disk->put('_thumb_' . $movedFileName, fopen($tmpStorage . '/_thumb_' . $movedFileName, 'r+'));
-                File::delete($tmpStorage . '/_thumb_' . $movedFileName);                
+                File::delete($tmpStorage . '/_thumb_' . $movedFileName);
                 $fileData['has_thumbnail'] = 1;
-                
-            } 
+
+            }
 
             /*
              * move uploaded file to final location
              */
             $disk->put($movedFileName, fopen($tmpStorage . '/' . $movedFileName, 'r+'));
             File::delete($tmpStorage . '/' . $movedFileName);
-            
+
             /*
              * save in db
-             */          
-            $fileData['filename'] = $movedFileName;  
-            $fileData['alias'] = Input::file('file')->getClientOriginalName();
+             */
+            $fileData['filename'] = $movedFileName;
+            $fileData['alias'] = Request::file('file')->getClientOriginalName();
             $fileData['public_resource_url'] = config('laradrop.disk_public_url') . '/' . $movedFileName;
             $fileData['type'] = $fileExt;
-            if(Input::get('pid') > 0) {
-                $fileData['parent_id'] = Input::get('pid');
+            if (Request::input('pid') > 0) {
+                $fileData['parent_id'] = Request::input('pid');
             }
             $meta = $disk->getDriver()->getAdapter()->getMetaData($movedFileName);
             $meta['disk'] = config('laradrop.disk');
             $fileData['meta'] = json_encode($meta);
             $file = $this->file->create($fileData);
-            
+
             /*
              * fire 'file uploaded' event
              */
             event(new FileWasUploaded([
-                'file'     => $file,
-                'postData' => Input::all()
+                'file' => $file,
+                'postData' => Request::all(),
             ]));
-            
-            return $file;
-            
-        } 
 
-        catch (Exception $e) {
-            
+            return $file;
+
+        } catch (Exception $e) {
+
             // delete the file(s)
-            if( isset($disk) && $disk) {
-                
-                if( $disk->has($movedFileName)) {
+            if (isset($disk) && $disk) {
+
+                if ($disk->has($movedFileName)) {
                     $disk->delete($movedFileName);
                 }
-                
-                if( $disk->has('_thumb_' . $movedFileName)) {
+
+                if ($disk->has('_thumb_' . $movedFileName)) {
                     $disk->delete('_thumb_' . $movedFileName);
                 }
             }
-            
+
             return $this->handleError($e);
         }
     }
@@ -193,77 +203,62 @@ class LaradropController extends BaseController {
     /**
      * Delete the resource
      *
-     * @param $id 
+     * @param $id
+     *
      * @return JsonResponse
      */
     public function destroy($id)
     {
         try {
             $this->file->destroy($id);
-        
-            return response()->json([
-                'status' => 'success'
-            ]);
-        } 
 
-        catch (Exception $e) {
+            return response()->json([
+                'status' => 'success',
+            ]);
+        } catch (Exception $e) {
             return $this->handleError($e);
         }
     }
-    
+
     /**
      * Move file
-     * 
+     *
      * @return JsonResponse
      */
-    public function move(){
-    
+    public function move()
+    {
+
         try {
-            $this->file->move(Input::get('draggedId'), Input::get('droppedId'));
+            $this->file->move(Request::input('draggedId'), Request::input('droppedId'));
 
             return response()->json([
-                'status' => 'success'
+                'status' => 'success',
             ]);
-        } 
-
-        catch (Exception $e) {
+        } catch (Exception $e) {
             return $this->handleError($e);
         }
     }
-    
+
     /**
      * Update filename
-     * 
+     *
      * @param int $id
+     *
      * @return JsonResponse
      */
-    public function update($id){
-    
+    public function update($id)
+    {
+
         try {
-            $file = $this->file->find($id);            
-            $file->filename = Input::get('filename');
+            $file = $this->file->find($id);
+            $file->filename = Request::input('filename');
             $file->save();
 
             return response()->json([
-                'status' => 'success'
+                'status' => 'success',
             ]);
-        } 
-
-        catch (Exception $e) {
+        } catch (Exception $e) {
             return $this->handleError($e);
         }
-    }
-    
-    /**
-     * Error handler for this controller
-     * 
-     * @param Exception $e
-     * @return JsonResponse
-     */
-    private function handleError(Exception $e)
-    {
-        return response()->json([
-            'msg' => $e->getMessage()
-        ], 401);
     }
 }

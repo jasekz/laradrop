@@ -1,116 +1,116 @@
 <?php
+
 namespace Jasekz\Laradrop\Services;
 
 use Jasekz\Laradrop\Models\File as FileModel;
 use Jasekz\Laradrop\Events\FileWasDeleted;
-use Exception, Config;
 
-class File extends FileModel {
+class File extends FileModel
+{
 
     /**
      * Return all files which belong to the parent (pid), or root if no pid provided.
-     * 
-     * @param int $parentId
-     * @throws Exception
+     *
+     * @param $parentId
      * @return array
+     * @throws \Exception
      */
     public function get($parentId)
     {
         try {
             $out = [];
-            
-            if($this->count() && $parentId > 0) {
-                $files = $this->where('id', '=', $parentId)->first()->immediateDescendants()->get();
-            } else if($this->count()) {
-                $files = $this->orderBy('parent_id')->first()->getSiblingsAndSelf();
+
+            if ($this->count() && $parentId > 0) {
+                $files = $this->where('parent_id', '=', $parentId)->get();
+            } else if ($this->count()) {
+                $files = $this->whereNull('parent_id')->get();
             }
-            
-            if(isset($files)) {
-                
-                foreach($files as $file) {
-                    
-                    if( $file->has_thumbnail && config('laradrop.disk_public_url')) {
-                        
+
+            if (isset($files)) {
+
+                foreach ($files as $file) {
+
+                    if ($file->has_thumbnail && config('laradrop.disk_public_url')) {
+
                         $publicResourceUrlSegments = explode('/', $file->public_resource_url);
                         $publicResourceUrlSegments[count($publicResourceUrlSegments) - 1] = '_thumb_' . $publicResourceUrlSegments[count($publicResourceUrlSegments) - 1];
-                        $file->filename = implode('/', $publicResourceUrlSegments); 
-                    
+                        $file->filename = implode('/', $publicResourceUrlSegments);
+
                     } else {
                         $file->filename = config('laradrop.default_thumbnail_url');
                     }
-                    
+
                     $file->numChildren = $file->children()->count();
-                    
-                    if($file->type == 'folder') {
+
+                    if ($file->type == 'folder') {
                         array_unshift($out, $file);
                     } else {
                         $out[] = $file;
                     }
                 }
             }
-            
+
             return $out;
-        }
-        
-        catch (Exception $e) {
+        } catch (\Exception $e) {
             throw $e;
         }
     }
-    
+
     /**
-     * Delete file(s) 
-     * 
+     * Delete file(s)
+     *
      * @param int $id
-     * @throws Exception
+     * @return int|void
+     * @throws \Exception
      */
-    public static function destroy($id) 
+    public static function destroy($id)
     {
         try {
             $file = self::find($id);
-            
-            if($file->descendants()->exists()) {
-                foreach($file->descendants()->where('type', '!=', 'folder')->get() as $descendant) {
-                    
+
+            if ($file->children()->exists()) {
+                foreach ($file->children()->where('type', '!=', 'folder')->get() as $descendant) {
+
                     event(new FileWasDeleted([ // fire 'file deleted' event for each descendant
                         'file' => $descendant
                     ]));
+
+                    $descendant->delete();
                 }
             }
-            
+
             $file->delete($id);
 
-            if($file->type != 'folder') {
+            if ($file->type != 'folder') {
                 event(new FileWasDeleted([ // fire 'file deleted' event for file
                     'file' => $file
                 ]));
             }
-        }
-        
-        catch (Exception $e) {
+        } catch (\Exception $e) {
             throw $e;
         }
     }
-    
+
     /**
      * Move file
-     * 
-     * @param int $draggedFileId
-     * @param int $droppedFileId
+     *
+     * @param $draggedFileId
+     * @param $droppedFileId
+     * @throws \Exception
      */
-    public function move($draggedFileId, $droppedFileId) 
+    public function move($draggedFileId, $droppedFileId)
     {
         try {
             $dragged = $this->find($draggedFileId);
             $dropped = $this->find($droppedFileId);
-            
-            if($droppedFileId == 0) {
-                $dragged->makeRoot();
+
+            if ($droppedFileId == 0) {
+                $dragged->parent_id = null;
             } else {
-                $dragged->makeChildOf($dropped);
+                $dragged->parent_id = $dropped->id;
             }
-        }
-        
-        catch (Exception $e) {
+            $dragged->save();
+        } catch (\Exception $e) {
             throw $e;
         }
     }
