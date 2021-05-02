@@ -7,12 +7,7 @@
 This is a file manager using Dropzone.js for Laravel 5.  It provides basic functionality for managing, uploading,
 and deleting files.
 
-## Demo
-A demo of the system can be found at http://laradrop.elegrit.com.
-
 ## Quick Start
-Here's an 4 step process to get a fully functional demo, similar to http://laradrop.elegrit.com.
-
 
 1)  Follow the **Installation**  instructions below.
     
