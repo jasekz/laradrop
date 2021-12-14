@@ -3,7 +3,7 @@
 namespace Jasekz\Laradrop\Http\Controllers;
 
 use Exception;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
@@ -46,10 +46,10 @@ class LaradropController extends BaseController
      *
      * @return JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $files = $this->file->get(Request::input('pid'));
+            $files = $this->file->get($request->get('pid'));
 
             return response()->json([
                 'status' => 'success',
@@ -79,19 +79,20 @@ class LaradropController extends BaseController
      *
      * @return JsonResponse
      */
-    public function create()
+    public function create(Request $request)
     {
         try {
-            $fileData['alias'] = Request::input('filename') ? Request::input('filename') : date('m.d.Y - G:i:s');
+            $fileData['alias'] = $request->get('filename') ? $request->get('filename') : date('m.d.Y - G:i:s');
             $fileData['type'] = 'folder';
-            if (Request::input('pid') > 0) {
-                $fileData['parent_id'] = Request::input('pid');
+            if ($request->get('pid') > 0) {
+                $fileData['parent_id'] = $request->get('pid');
             }
 
-            $this->file->create($fileData);
+            $file = $this->file->create($fileData);
 
             return response()->json([
                 'status' => 'success',
+                'id' => $file->id
             ]);
         } catch (Exception $e) {
             return $this->handleError($e);
@@ -103,33 +104,33 @@ class LaradropController extends BaseController
      *
      * @return JsonResponse
      */
-    public function store()
+    public function store(Request $request)
     {
         try {
 
-            if (!Request::hasFile('file')) {
+            if (!$request->hasFile('file')) {
                 throw new Exception(trans('err.fileNotProvided'));
             }
 
-            if (!Request::file('file')->isValid()) {
+            if (!$request->file('file')->isValid()) {
                 throw new Exception(trans('err.invalidFile'));
             }
 
             /*
              * move file to temp location
              */
-            $fileExt = Request::file('file')->getClientOriginalExtension();
-            $fileName = str_replace('.' . $fileExt, '', Request::file('file')->getClientOriginalName()) . '-' . date('Ymdhis');
-            $mimeType = Request::file('file')->getMimeType();
+            $fileExt = $request->file('file')->getClientOriginalExtension();
+            $fileName = str_replace('.' . $fileExt, '', $request->file('file')->getClientOriginalName()) . '-' . date('Ymdhis');
+            $mimeType = $request->file('file')->getMimeType();
             $tmpStorage = storage_path();
             $movedFileName = $fileName . '.' . $fileExt;
-            $fileSize = Request::file('file')->getSize();
+            $fileSize = $request->file('file')->getSize();
 
             if ($fileSize > ((int)config('laradrop.max_upload_size') * 1000000)) {
                 throw new Exception(trans('err.invalidFileSize'));
             }
 
-            Request::file('file')->move($tmpStorage, $movedFileName);
+            $request->file('file')->move($tmpStorage, $movedFileName);
 
             $disk = Storage::disk(config('laradrop.disk'));
 
@@ -161,11 +162,11 @@ class LaradropController extends BaseController
              * save in db
              */
             $fileData['filename'] = $movedFileName;
-            $fileData['alias'] = Request::file('file')->getClientOriginalName();
+            $fileData['alias'] = $request->file('file')->getClientOriginalName();
             $fileData['public_resource_url'] = config('laradrop.disk_public_url') . '/' . $movedFileName;
             $fileData['type'] = $fileExt;
-            if (Request::input('pid') > 0) {
-                $fileData['parent_id'] = Request::input('pid');
+            if ($request->get('pid') > 0) {
+                $fileData['parent_id'] = $request->get('pid');
             }
             $meta = $disk->getDriver()->getAdapter()->getMetaData($movedFileName);
             $meta['disk'] = config('laradrop.disk');
@@ -177,7 +178,7 @@ class LaradropController extends BaseController
              */
             event(new FileWasUploaded([
                 'file' => $file,
-                'postData' => Request::all(),
+                'postData' => $request->all(),
             ]));
 
             return $file;
@@ -225,11 +226,11 @@ class LaradropController extends BaseController
      *
      * @return JsonResponse
      */
-    public function move()
+    public function move(Request $request)
     {
 
         try {
-            $this->file->move(Request::input('draggedId'), Request::input('droppedId'));
+            $this->file->move($request->get('draggedId'), $request->get('droppedId'));
 
             return response()->json([
                 'status' => 'success',
@@ -246,12 +247,12 @@ class LaradropController extends BaseController
      *
      * @return JsonResponse
      */
-    public function update($id)
+    public function update(Request $request, $id)
     {
 
         try {
             $file = $this->file->find($id);
-            $file->filename = Request::input('filename');
+            $file->filename = $request->get('filename');
             $file->save();
 
             return response()->json([
