@@ -1,7 +1,17 @@
 {
     "name": "jasekz/laradrop",
-    "description": "File manager using Dropzone.js for Laravel 5",
-    "keywords": ["php","laravel 5","dropzone.js","file manager","file upload"],
+    "description": "File manager using Dropzone.js for Laravel 5 | 6 | 7 | 8",
+    "keywords": [
+        "php",
+        "laravel 5",
+        "laravel 6",
+        "laravel 7",
+        "laravel 8",
+        "dropzone.js",
+        "file manager",
+        "file upload"
+    ],
+    "type": "library",
     "license": "MIT",
     "authors": [
         {
@@ -12,13 +22,26 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "illuminate/support": "~5.0",
+        "illuminate/support": "~5.0|^6.0|^7.0|^8.0",
         "ext-fileinfo": "*",
-        "intervention/image": "2.*",        
-        "baum/baum": "~1.1|v2.x-dev"
+        "intervention/image": "2.*",
+        "illuminate/database": "~5.0|^6.0|^7.0|^8.0",
+        "ext-json": "*",
+        "illuminate/routing": "~5.0|^6.0|^7.0|^8.0",
+        "illuminate/queue": "~5.0|^6.0|^7.0|^8.0"
     },
     "autoload": {
-        "psr-0": {"Jasekz\\Laradrop": "src"}
+        "psr-0": {
+            "Jasekz\\Laradrop": "src"
+        }
     },
-    "minimum-stability": "dev"
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Jasekz\\Laradrop\\LaradropServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

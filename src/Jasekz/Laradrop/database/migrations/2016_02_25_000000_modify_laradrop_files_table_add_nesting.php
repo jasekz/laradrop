@@ -1,8 +1,11 @@
 <?php
+
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
-class ModifyLaradropFilesTableAddNesting extends Migration {
+class ModifyLaradropFilesTableAddNesting extends Migration
+{
 
     /**
      * Run the migrations.
@@ -11,7 +14,7 @@ class ModifyLaradropFilesTableAddNesting extends Migration {
      */
     public function up()
     {
-        Schema::table('laradrop_files', function ($table) {
+        Schema::table('laradrop_files', function (Blueprint $table) {
             $table->integer('parent_id')->nullable()->index()->after('id');
             $table->integer('lft')->nullable()->index()->after('parent_id');
             $table->integer('rgt')->nullable()->index()->after('lft');
@@ -23,7 +26,7 @@ class ModifyLaradropFilesTableAddNesting extends Migration {
             $table->smallInteger('has_thumbnail')->after('type')->default(0);
         });
     }
-    
+
     /**
      * Reverse the migrations.
      *
@@ -31,7 +34,7 @@ class ModifyLaradropFilesTableAddNesting extends Migration {
      */
     public function down()
     {
-        Schema::table('laradrop_files', function ($table) {
+        Schema::table('laradrop_files', function (Blueprint $table) {
             $table->dropColumn('parent_id');
             $table->dropColumn('lft');
             $table->dropColumn('rgt');

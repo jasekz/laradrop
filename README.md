@@ -4,14 +4,14 @@
 [![Software License][ico-license]](LICENSE.md)
 
 
-This is a file manager using Dropzone.js for Laravel 5.  It provides basic functionality for managing, uploading,
+This is a file manager using Dropzone.js for Laravel 5, 6, 7, 8.  It provides basic functionality for managing, uploading,
 and deleting files.
 
 ## Quick Start
 
 1)  Follow the **Installation**  instructions below.
     
-        Getting errors?  Make sure you have a database set up (http://laravel.com/docs/5.0/database).
+        Getting errors?  Make sure you have a database set up (https://laravel.com/docs/7.x/database).
         
 2) In a view (welcome.blade.php, for example), add:  
 ```html
@@ -69,11 +69,11 @@ to the `providers` array.
 
 Then run 
 
-    artisan vendor:publish
+    php artisan vendor:publish
     
 followed by
 
-    artisan migrate
+    php artisan migrate
 
 ## Configuration (.env)
 

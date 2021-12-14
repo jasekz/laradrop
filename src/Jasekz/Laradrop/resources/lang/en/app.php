@@ -13,11 +13,11 @@ return [
     |
     */
 
-    'addFolder' => '&#43; Add Folder',
-    'delete' => '&#10008; delete',
-    'move' => '&#8631; move',
+    'addFolder' => '+ Add Folder',
+    'delete' => '✘ delete',
+    'move' => '↷ move',
     'save' => 'Save',
-    'select' => '&#10004; select',
+    'select' => '✔ select',
     'startUpload' => 'Start Upload',
-    'uploadFiles' => '&#8682; Click or drop files here to upload.',
+    'uploadFiles' => '⇪ Click or drop files here to upload.',
 ];
