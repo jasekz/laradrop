@@ -15,7 +15,7 @@ class File extends FileModel
      * @return array
      * @throws \Exception
      */
-    public function get($parentId)
+    public function get($parentId = 0)
     {
         try {
             $out = [];
