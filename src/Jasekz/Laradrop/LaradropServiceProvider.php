@@ -4,6 +4,7 @@ namespace Jasekz\Laradrop;
 
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Jasekz\Laradrop\Services\File as LaradropFileService;
 
 class LaradropServiceProvider extends ServiceProvider
 {
@@ -61,6 +62,8 @@ class LaradropServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->bind('laradrop', function($app) {
+            return new LaradropFileService();
+        });
     }
 }
