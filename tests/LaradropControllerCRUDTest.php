@@ -9,18 +9,21 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Jasekz\Laradrop\Http\Controllers\LaradropController;
 use Jasekz\Laradrop\Services\File as FileService;
-
+use Jasekz\Laradrop\Events\FileWasDeleted;
+use Illuminate\Contracts\Filesystem\Filesystem as FakeStorage;
 
 /**
  * Copy this test to your Laravel app's "tests" directory and run it from there:
- *
- * `vendor/bin/phpunit tests/LaradropControllerCRUDTest`
+ * * `
+ * `
  */
 class LaradropControllerCRUDTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected string $storage, $filename;
+    protected string $filename;
+
+    protected FakeStorage $storage;
 
     protected UploadedFile $file;
 
@@ -28,15 +31,15 @@ class LaradropControllerCRUDTest extends TestCase
 
     protected LaradropController $controller;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
+        $this->withoutEvents();
 
-        $this->storage = 'laradrop-tests';
         $this->fileName = 'laradrop-test.png';
 
-        Storage::fake($this->storage);
-        config(['laradrop.disk' => $this->storage]);
+        $this->storage = Storage::fake('laradrop-tests');
+        config(['laradrop.disk' => 'laradrop-tests']);
 
         $this->file = UploadedFile::fake()->image($this->fileName);
         $this->fileService = new FileService();
@@ -60,7 +63,7 @@ class LaradropControllerCRUDTest extends TestCase
     {
         $this->setFiles();
 
-        Storage::disk($this->storage)->assertExists($this->newFile->filename);
+        $this->storage->assertExists($this->newFile->filename);
         $this->assertEquals($this->newFile->id, $this->newFileFromDb->id);
     }
 
@@ -87,6 +90,7 @@ class LaradropControllerCRUDTest extends TestCase
         $this->assertEquals($this->newFile->filename, $this->newFileFromDb->filename);
 
         $fileId = $this->newFile->id;
+        $this->expectsEvents(FileWasDeleted::class);
         $this->controller->destroy( $fileId );
         $file = FileService::find($fileId);
 
@@ -129,6 +133,7 @@ class LaradropControllerCRUDTest extends TestCase
         $draggedIn = FileService::find($draggedInId);
         $droppedIn = FileService::find($droppedInId);
 
+        $this->assertEquals($draggedIn->parent_id, $droppedIn->id);
         $this->assertEquals('success', $res->getData()->status);
     }
 
@@ -138,10 +143,10 @@ class LaradropControllerCRUDTest extends TestCase
         if( ! $this->newFileFromDb->id ) $this->newFileFromDb = FileService::find($this->newFile->id);
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         parent::tearDown();
 
-        Storage::disk($this->storage)->delete([$this->newFile->filename, '_thumb_' . $this->newFile->filename]);
+        $this->storage->delete([$this->newFile->filename, '_thumb_' . $this->newFile->filename]);
     }
 }
