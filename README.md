@@ -11,7 +11,7 @@ and deleting files.
 
 1)  Follow the **Installation**  instructions below.
     
-        Getting errors?  Make sure you have a database set up (https://laravel.com/docs/7.x/database).
+        Getting errors?  Make sure you have a database set up (https://laravel.com/docs/database).
         
 2) In a view (welcome.blade.php, for example), add:  
 ```html
@@ -54,7 +54,7 @@ That's it.  If you have any issues or question, please feel free to open an issu
 
 ## Installation
 
-NOTE: If you haven't set up a database yet for your app, please do that first as per Laravel docs -  http://laravel.com/docs/5.0/database.
+NOTE: If you haven't set up a database yet for your app, please do that first as per Laravel docs -  http://laravel.com/docs/database.
 
 Via composer
 ```
@@ -77,11 +77,11 @@ followed by
 
 ## Configuration (.env)
 
-Laradrop uses Laravel's Filesystem mechanism (https://laravel.com/docs/5.2/filesystem) and by default will store your 
+Laradrop uses Laravel's Filesystem mechanism (https://laravel.com/docs/filesystem) and by default will store your 
 files in the `storage/app` directory.  If you would like to modify this behavior, along with other default settings, you can set your `.env` file variables:
 ```php
 
-# s3, local, or Rackspace.  See 'Other Driver Prerequisites' at https://laravel.com/docs/5.2/filesystem.  Defaults to 'local'
+# s3, local, or Rackspace.  See 'Other Driver Prerequisites' at https://laravel.com/docs/filesystem.  Defaults to 'local'
 LARADROP_DISK=local 
 
 # If your files need to be web accessible, set this param.  S3, for example, would be 'https://s3.amazonaws.com/my-bucket'.  Defaults to the web root (public).
